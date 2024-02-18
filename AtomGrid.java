@@ -45,11 +45,23 @@ public class AtomGrid
 
     }
 
+    public void diplay()
+    {
+        for(int i=0;i<10;i++)
+        {
+            for(int k=0;k<10;k++)
+            {
+                System.out.print(squareGrid[i][k] + " | ");
+            }
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args)
     {
         AtomGrid squareGrid = new AtomGrid();
         squareGrid.new assignRandom();
-        //display func
+        squareGrid.diplay();
 
     }
 }
