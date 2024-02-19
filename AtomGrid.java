@@ -23,9 +23,9 @@ public class AtomGrid
         }
     }
 
-    public  class assignRandom
+    class AssignRandom
     {
-        public assignRandom() {
+        public AssignRandom() {
             assignRandomValues();
         }
     }
@@ -60,7 +60,7 @@ public class AtomGrid
     public static void main(String[] args)
     {
         AtomGrid squareGrid = new AtomGrid();
-        squareGrid.new assignRandom();
+        squareGrid.new AssignRandom();
         squareGrid.diplay();
 
     }
