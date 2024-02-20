@@ -1,7 +1,6 @@
 package app;
 
 import javafx.event.EventHandler;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -25,19 +24,11 @@ public class Hexagon extends Polygon {
         }
         super.setStroke(Color.YELLOW);
         super.setStrokeWidth(3);
-        super.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                Hexagon.super.toFront();
-                Hexagon.super.setStroke(Color.RED);
-            }
+        super.setOnMouseEntered(mouseEvent -> {
+            Hexagon.super.toFront();
+            Hexagon.super.setStroke(Color.RED);
         });
-        super.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                Hexagon.super.setStroke(Color.YELLOW);
-            }
-        });
+        super.setOnMouseExited(mouseEvent -> Hexagon.super.setStroke(Color.YELLOW));
     }
     final private double centreX;
     final private double centreY;
