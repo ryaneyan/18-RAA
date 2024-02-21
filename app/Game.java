@@ -2,7 +2,9 @@ package app;
 
 import static app.Constants.*;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -34,10 +36,17 @@ public class Game extends Application {
         for (List<Hexagon> list: hexBoard) {
             root.getChildren().addAll(list);
         }
-
-        Scene scene = new Scene(root);
-
-        stage.setScene(scene);
+        Pane welcome = new Pane();
+        Scene welcomeScene = new Scene(welcome);
+        Scene main = new Scene(root);
+        stage.setScene(welcomeScene);
+        stage.setMaximized(true);
+        welcome.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                stage.setScene(main);
+            }
+        });
         stage.setMaximized(true);
         stage.setTitle("BlackBox+");
         stage.show();
