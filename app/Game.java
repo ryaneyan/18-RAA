@@ -41,6 +41,7 @@ public class Game extends Application {
         stage.setMaximized(true);
         stage.setTitle("BlackBox+");
         stage.show();
+        System.out.println(hexBoard.get(0).get(0).getPoints());
     }
 
     public static void main(String[] args) {
