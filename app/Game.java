@@ -34,19 +34,8 @@ public class Game extends Application {
             else limit--;
         }
 
-        Pane root = new Pane();
-        root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-
-        for (List<Hexagon> list: hexBoard) {
-            root.getChildren().addAll(list);
-        }
         Pane welcome = new Pane();
-        Scene welcomeScene = new Scene(welcome);
-        Scene main = new Scene(root);
-        stage.setScene(welcomeScene);
-        stage.setMaximized(true);
         welcome.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-
 
         javafx.scene.text.Text welcomeText = new javafx.scene.text.Text("Welcome to BlackBox+\nPress anywhere to enter");
 
@@ -56,10 +45,20 @@ public class Game extends Application {
         welcomeText.setLayoutY(450);
         welcome.getChildren().add(welcomeText);
 
+        Pane root = new Pane();
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+
+        for (List<Hexagon> list: hexBoard) {
+            root.getChildren().addAll(list);
+        }
+
+        Scene main = new Scene(welcome);
+        stage.setScene(main);
+        stage.setMaximized(true);
         welcome.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                stage.setScene(main);
+                main.setRoot(root);
                 double centerX = hexBoard.get(0).get(1).getCentreX();
                 double centerY = hexBoard.get(0).get(1).getCentreY();
 
