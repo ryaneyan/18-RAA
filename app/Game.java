@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.shape.Circle;
+import java.util.Random;
 
 public class Game extends Application {
     List<List<Hexagon>> hexBoard = new ArrayList<>();
@@ -57,13 +58,21 @@ public class Game extends Application {
         stage.setMaximized(true);
         welcome.setOnMouseClicked(mouseEvent -> {
             main.setRoot(root);
-            double centerX = hexBoard.get(0).get(1).getCentreX();
-            double centerY = hexBoard.get(0).get(1).getCentreY();
 
-            System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
+            Random rand = new Random();
+            int tally = 0;
+            while(tally < ATOMS_AMOUNT)
+            {
+                int x = rand.nextInt(9);
+                int y = rand.nextInt(hexBoard.get(x).size());
+                double centerX = hexBoard.get(x).get(y).getCentreX();
+                double centerY = hexBoard.get(x).get(y).getCentreY();
+                AtomPlacer.placeAtom(root, centerX, centerY);
 
+                System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
 
-            placeAtom(root, centerX, centerY);
+                tally++;
+            }
         });
 
         stage.setMaximized(true);
@@ -72,11 +81,7 @@ public class Game extends Application {
         System.out.println(hexBoard.get(0).get(0).getPoints());
     }
 
-    private void placeAtom(Pane pane, double centerX, double centerY) {
-        Circle atom = new Circle(centerX, centerY, Atom_Size);
-        atom.setFill(Color.RED);
-        pane.getChildren().add(atom);
-    }
+
 
     public static void main(String[] args) {
         launch(args);
