@@ -14,11 +14,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.shape.Circle;
 
 public class Game extends Application {
     List<List<Hexagon>> hexBoard = new ArrayList<>();
     @Override
     public void start(Stage stage) {
+
 
         int limit = 5;
         boolean increasing = true;
@@ -37,9 +39,12 @@ public class Game extends Application {
         Pane welcome = new Pane();
         welcome.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-        Text welcomeText = new Text(400, 200, "Welcome\nto\nBlackBox+");
-        welcomeText.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.ITALIC, 100));
+        javafx.scene.text.Text welcomeText = new javafx.scene.text.Text("Welcome to BlackBox+\nPress anywhere to enter");
+
         welcomeText.setFill(Color.YELLOW);
+        welcomeText.setFont(Font.font("Lucida Console", 40));
+        welcomeText.setLayoutX(500);
+        welcomeText.setLayoutY(450);
         welcome.getChildren().add(welcomeText);
 
         Pane root = new Pane();
@@ -56,11 +61,25 @@ public class Game extends Application {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 main.setRoot(root);
+                double centerX = hexBoard.get(0).get(1).getCentreX();
+                double centerY = hexBoard.get(0).get(1).getCentreY();
+
+                System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
+
+
+                placeAtom(root, centerX, centerY, Color.RED);
             }
         });
         stage.setMaximized(true);
         stage.setTitle("BlackBox+");
         stage.show();
+        System.out.println(hexBoard.get(0).get(0).getPoints());
+    }
+
+    private void placeAtom(Pane pane, double centerX, double centerY, Color color) {
+        Circle atom = new Circle(centerX, centerY, Atom_Size);
+        atom.setFill(color);
+        pane.getChildren().add(atom);
     }
 
     public static void main(String[] args) {
