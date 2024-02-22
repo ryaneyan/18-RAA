@@ -7,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,27 +34,33 @@ public class Game extends Application {
             else limit--;
         }
 
+        Pane welcome = new Pane();
+        welcome.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+
+        Text welcomeText = new Text(400, 200, "Welcome\nto\nBlackBox+");
+        welcomeText.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.ITALIC, 100));
+        welcomeText.setFill(Color.YELLOW);
+        welcome.getChildren().add(welcomeText);
+
         Pane root = new Pane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
         for (List<Hexagon> list: hexBoard) {
             root.getChildren().addAll(list);
         }
-        Pane welcome = new Pane();
-        Scene welcomeScene = new Scene(welcome);
-        Scene main = new Scene(root);
-        stage.setScene(welcomeScene);
+
+        Scene main = new Scene(welcome);
+        stage.setScene(main);
         stage.setMaximized(true);
         welcome.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                stage.setScene(main);
+                main.setRoot(root);
             }
         });
         stage.setMaximized(true);
         stage.setTitle("BlackBox+");
         stage.show();
-        System.out.println(hexBoard.get(0).get(0).getPoints());
     }
 
     public static void main(String[] args) {
