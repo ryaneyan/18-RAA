@@ -7,14 +7,18 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.shape.Circle;
 
 public class Game extends Application {
     List<List<Hexagon>> hexBoard = new ArrayList<>();
     @Override
     public void start(Stage stage) {
+
 
         int limit = 5;
         boolean increasing = true;
@@ -41,16 +45,40 @@ public class Game extends Application {
         Scene main = new Scene(root);
         stage.setScene(welcomeScene);
         stage.setMaximized(true);
+        welcome.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+
+
+        javafx.scene.text.Text welcomeText = new javafx.scene.text.Text("Welcome to BlackBox+\nPress anywhere to enter");
+
+        welcomeText.setFill(Color.YELLOW);
+        welcomeText.setFont(Font.font("Lucida Console", 40));
+        welcomeText.setLayoutX(500);
+        welcomeText.setLayoutY(450);
+        welcome.getChildren().add(welcomeText);
+
         welcome.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 stage.setScene(main);
+                double centerX = hexBoard.get(0).get(1).getCentreX();
+                double centerY = hexBoard.get(0).get(1).getCentreY();
+
+                System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
+
+
+                placeAtom(root, centerX, centerY, Color.RED);
             }
         });
         stage.setMaximized(true);
         stage.setTitle("BlackBox+");
         stage.show();
         System.out.println(hexBoard.get(0).get(0).getPoints());
+    }
+
+    private void placeAtom(Pane pane, double centerX, double centerY, Color color) {
+        Circle atom = new Circle(centerX, centerY, 20);
+        atom.setFill(color);
+        pane.getChildren().add(atom);
     }
 
     public static void main(String[] args) {
