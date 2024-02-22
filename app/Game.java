@@ -2,9 +2,7 @@ package app;
 
 import static app.Constants.*;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -39,10 +37,10 @@ public class Game extends Application {
         Pane welcome = new Pane();
         welcome.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-        javafx.scene.text.Text welcomeText = new javafx.scene.text.Text("Welcome to BlackBox+\nPress anywhere to enter");
+        Text welcomeText = new Text("Welcome to BlackBox+\nPress Anywhere to Start");
 
         welcomeText.setFill(Color.YELLOW);
-        welcomeText.setFont(Font.font("Lucida Console", 40));
+        welcomeText.setFont(Font.font("Lucida Console", FontWeight.BOLD, 40));
         welcomeText.setLayoutX(500);
         welcomeText.setLayoutY(450);
         welcome.getChildren().add(welcomeText);
@@ -57,19 +55,17 @@ public class Game extends Application {
         Scene main = new Scene(welcome);
         stage.setScene(main);
         stage.setMaximized(true);
-        welcome.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                main.setRoot(root);
-                double centerX = hexBoard.get(0).get(1).getCentreX();
-                double centerY = hexBoard.get(0).get(1).getCentreY();
+        welcome.setOnMouseClicked(mouseEvent -> {
+            main.setRoot(root);
+            double centerX = hexBoard.get(0).get(1).getCentreX();
+            double centerY = hexBoard.get(0).get(1).getCentreY();
 
-                System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
+            System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
 
 
-                placeAtom(root, centerX, centerY);
-            }
+            placeAtom(root, centerX, centerY);
         });
+
         stage.setMaximized(true);
         stage.setTitle("BlackBox+");
         stage.show();

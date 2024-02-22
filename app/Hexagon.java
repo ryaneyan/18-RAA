@@ -1,6 +1,8 @@
 package app;
 
 import static app.Constants.NUM_OF_SIDES;
+
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
