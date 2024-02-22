@@ -67,7 +67,7 @@ public class Game extends Application {
                 System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
 
 
-                placeAtom(root, centerX, centerY, Color.RED);
+                placeAtom(root, centerX, centerY);
             }
         });
         stage.setMaximized(true);
@@ -76,9 +76,9 @@ public class Game extends Application {
         System.out.println(hexBoard.get(0).get(0).getPoints());
     }
 
-    private void placeAtom(Pane pane, double centerX, double centerY, Color color) {
+    private void placeAtom(Pane pane, double centerX, double centerY) {
         Circle atom = new Circle(centerX, centerY, Atom_Size);
-        atom.setFill(color);
+        atom.setFill(Color.RED);
         pane.getChildren().add(atom);
     }
 

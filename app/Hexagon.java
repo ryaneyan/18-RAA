@@ -27,7 +27,10 @@ public class Hexagon extends Polygon {
             Hexagon.super.toFront();
             Hexagon.super.setStroke(Color.RED);
         });
-        super.setOnMouseExited(mouseEvent -> Hexagon.super.setStroke(Color.YELLOW));
+        super.setOnMouseExited(mouseEvent -> {
+            Hexagon.super.toBack();
+            Hexagon.super.setStroke(Color.YELLOW);
+        });
     }
     final private double centreX;
     final private double centreY;
