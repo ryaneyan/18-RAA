@@ -9,4 +9,6 @@ public class Constants {
     public static final double X_ORIGIN = 550;
     public static final double Y_ORIGIN = 150;
     public static final double NUM_OF_SIDES = 6;
+
+    public static final double Atom_Size = 20;
 }

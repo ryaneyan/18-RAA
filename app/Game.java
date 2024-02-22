@@ -76,7 +76,7 @@ public class Game extends Application {
     }
 
     private void placeAtom(Pane pane, double centerX, double centerY, Color color) {
-        Circle atom = new Circle(centerX, centerY, 20);
+        Circle atom = new Circle(centerX, centerY, Atom_Size);
         atom.setFill(color);
         pane.getChildren().add(atom);
     }
