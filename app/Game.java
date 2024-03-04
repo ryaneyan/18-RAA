@@ -16,24 +16,12 @@ import javafx.scene.shape.Circle;
 import java.util.Random;
 
 public class Game extends Application {
-    List<List<Hexagon>> hexBoard = new ArrayList<>();
+    List<List<Hexagon>> hexBoard;
     @Override
     public void start(Stage stage) {
 
+        hexBoard = Hexagon.generateBoard();
 
-        int limit = 5;
-        boolean increasing = true;
-        for (int i = 0; i < 9; i++) {
-            hexBoard.add(new ArrayList<>());
-            for (int j = 0; j < limit; j++) {
-                if(increasing) hexBoard.get(i).add(new Hexagon(X_ORIGIN - (X_DIFF/2*i) + (X_DIFF*j), Y_ORIGIN + Y_DIFF*i, RADIUS));
-                else hexBoard.get(i).add(new Hexagon(X_ORIGIN - (X_DIFF/2*(8-i)) + (X_DIFF*j), Y_ORIGIN + Y_DIFF*i, RADIUS));
-
-            }
-            if (i == 4) increasing = false;
-            if (increasing) limit++;
-            else limit--;
-        }
 
         Pane welcome = new Pane();
         welcome.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
@@ -65,11 +53,14 @@ public class Game extends Application {
             {
                 int x = rand.nextInt(9);
                 int y = rand.nextInt(hexBoard.get(x).size());
-                double centerX = hexBoard.get(x).get(y).getCentreX();
-                double centerY = hexBoard.get(x).get(y).getCentreY();
-                AtomPlacer.placeAtom(root, centerX, centerY);
+                Hexagon current = hexBoard.get(x).get(y);
+                if (current.isAtom()) {
+                    tally--;
+                    continue;
+                }
+                current.convertToAtom(root);
 
-                System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
+//                System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
 
                 tally++;
             }

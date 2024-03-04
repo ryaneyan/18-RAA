@@ -9,6 +9,6 @@ public class Constants {
     public static final double X_ORIGIN = 550;
     public static final double Y_ORIGIN = 150;
     public static final double NUM_OF_SIDES = 6;
-    public static final double ATOM_SIZE = RADIUS/2;
+    public static final double ATOM_SIZE = RADIUS/3;
     public static final double ATOMS_AMOUNT = 6;
 }
