@@ -54,30 +54,14 @@ public class Hexagon extends Polygon {
         return isAtom;
     }
 
-    public static List<List<Hexagon>> generateBoard() {
-        List<List<Hexagon>> hexBoard = new ArrayList<>();
-
-        int limit = 5;
-        boolean increasing = true;
-        for (int i = 0; i < 9; i++) {
-            hexBoard.add(new ArrayList<>());
-            for (int j = 0; j < limit; j++) {
-                if(increasing) hexBoard.get(i).add(new Hexagon(X_ORIGIN - (X_DIFF/2*i) + (X_DIFF*j), Y_ORIGIN + Y_DIFF*i, RADIUS));
-                else hexBoard.get(i).add(new Hexagon(X_ORIGIN - (X_DIFF/2*(8-i)) + (X_DIFF*j), Y_ORIGIN + Y_DIFF*i, RADIUS));
-            }
-            if (i == 4) increasing = false;
-            if (increasing) limit++;
-            else limit--;
-        }
-        return hexBoard;
-    }
 
     public void convertToAtom(Pane pane) {
         isAtom = true;
         pane.getChildren().add(new Circle(centreX, centreY, ATOM_SIZE, Color.RED));
-        Arc areaOfInfluence = new Arc(centreX, centreY, X_DIFF, X_DIFF, 0, 360);
+        Circle areaOfInfluence = new Circle(centreX, centreY, X_DIFF);
         areaOfInfluence.setFill(Color.TRANSPARENT);
         areaOfInfluence.setStroke(Color.BLUE);
+        areaOfInfluence.setMouseTransparent(true);
         pane.getChildren().add(areaOfInfluence);
     }
 }
