@@ -1,14 +1,17 @@
 package app;
 
+import javafx.css.Size;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 
 import java.util.List;
 import java.util.Random;
 
 import static app.Constants.ATOMS_AMOUNT;
+import static app.Constants.RADIUS;
 
 public class RootPane {
     private RootPane(){
@@ -22,6 +25,12 @@ public class RootPane {
             rootPane.getChildren().addAll(list);
         }
         generateRandomAtoms(rootPane);
+
+        Ray.drawButton1(rootPane);
+        Ray.drawButton2(rootPane);
+        Ray.drawButton3(rootPane);
+
+        // the end x and y work from the start x and y so rather than wanting to go to a coordinate you should instead add or subract what x/y you are away from the original
         return rootPane;
     }
 

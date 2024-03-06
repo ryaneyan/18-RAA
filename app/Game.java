@@ -24,8 +24,11 @@ public class Game extends Application {
 
 
 
-        Pane welcome = WelcomePane.generateWelcomePane();
-        Scene main = new Scene(welcome);
+//        Pane welcome = WelcomePane.generateWelcomePane();
+        Pane root = RootPane.generateRootPane();
+
+        Scene main = new Scene(root);
+
         stage.setScene(main);
         stage.setMaximized(true);
 
