@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +17,7 @@ import static app.Constants.RADIUS;
 public class RootPane {
     private RootPane(){
     }
+    private static List<Integer> atoms = new ArrayList<>();
 
     public static Pane generateRootPane() {
         Pane rootPane = new Pane();
@@ -37,20 +39,32 @@ public class RootPane {
     private static void generateRandomAtoms(Pane root) {
         Random rand = new Random();
         int tally = 0;
+//        int x = 0, y = 1;
         while(tally < ATOMS_AMOUNT)
         {
             int x = rand.nextInt(9);
             int y = rand.nextInt(HexBoard.getHexBoard().get(x).size());
+//            int[] atomsTest = {3, 3, 5, 0, 0, 2, 6, 6, 1, 0, 1, 3};
+//            int j = atomsTest[x];
+//            int k = atomsTest[y];
+
             Hexagon current = HexBoard.getHexBoard().get(x).get(y);
             if (current.isAtom()) {
-                tally--;
                 continue;
             }
+            atoms.add(x);
+            atoms.add(y);
             current.convertToAtom(root);
 
 //                System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
 
             tally++;
+            x+=2;
+            y+=2;
         }
+    }
+
+    public static List<Integer> getAtoms() {
+        return atoms;
     }
 }

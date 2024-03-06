@@ -1,11 +1,12 @@
 package app;
 
+import static app.Constants.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-
+import javafx.scene.shape.Shape;
 
 
 public class Ray extends Line
@@ -21,7 +22,15 @@ public class Ray extends Line
         super.setStroke(Color.rgb(96, 253, 253));
         super.setStrokeWidth(5);
         root.getChildren().add(this);
+
+        for (int i = 0; i < ATOMS_AMOUNT; i++) {
+            int x = RootPane.getAtoms().get(2*i);
+            int y = RootPane.getAtoms().get(2*i+1);
+
+            System.out.println(this.intersects(HexBoard.getHexBoard().get(x).get(y).getBoundsInLocal()));
+        }
     }
+
 
     // examples
 
