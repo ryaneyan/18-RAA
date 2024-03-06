@@ -1,6 +1,9 @@
 package app;
 
 import static app.Constants.*;
+
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -8,27 +11,112 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class Ray extends Line
-{
+enum RayDirection{
+    HORIZONTAL_LEFT,
+    HORIZONTAL_RIGHT,
+    DIAGONAL_UP_LEFT,
+    DIAGONAL_UP_RIGHT,
+    DIAGONAL_DOWN_LEFT,
+    DIAGONAL_DOWN_RIGHT
+}
 
-    public Ray(Pane root, int X1, int Y1, int X2, int Y2)
+public class Ray {
+    List<Point2D> rayPath = new ArrayList<>();
+
+    public Ray(int X, int Y, RayDirection direction)
     {
-        super(HexBoard.getHexBoard().get(X1).get(Y1).getCentreX(), HexBoard.getHexBoard().get(X1).get(Y1).getCentreY(),
-                HexBoard.getHexBoard().get(X2).get(Y2).getCentreX(), HexBoard.getHexBoard().get(X2).get(Y2).getCentreY());
+        rayPath.add(new Point2D(HexBoard.getHexBoard().get(X).get(Y).getCentreX()-X_DIFF/2, HexBoard.getHexBoard().get(0).get(0).getCentreY()));
+        rayPath.add(new Point2D(HexBoard.getHexBoard().get(X).get(Y).getCentreX(), HexBoard.getHexBoard().get(0).get(0).getCentreY()));
+        extendRay(X, Y, direction);
+    }
 
-        // create and configure line using points
+    private void extendRay(int xIndex, int yIndex, RayDirection direction) {
+        int newXindex = determineNewIndexes(xIndex, yIndex, direction)[0];
+        int newYindex = determineNewIndexes(xIndex, yIndex, direction)[1];
 
-        super.setStroke(Color.rgb(96, 253, 253));
-        super.setStrokeWidth(1);
-        root.getChildren().add(this);
+        try {
+            HexBoard.getHexBoard().get(newXindex).get(newYindex);
+        } catch (IndexOutOfBoundsException exception){
+            return;
+        }
 
+        if (checkAOFHit(newXindex, newYindex) == 1) {
+            // BOUNCE LOGIC
+            return;
+        }
+
+        rayPath.add(new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY()));
+
+        extendRay(newXindex, newYindex, direction);
+    }
+
+    private int[] determineNewIndexes(int xIndex, int yIndex, RayDirection direction) {
+        int newXindex = xIndex, newYindex = yIndex;
+
+        if (direction == RayDirection.HORIZONTAL_RIGHT) {
+            newXindex = xIndex;
+            newYindex = yIndex + 1;
+        } else if (direction == RayDirection.HORIZONTAL_LEFT) {
+            newXindex = xIndex;
+            newYindex = yIndex - 1;
+        } else if (direction == RayDirection.DIAGONAL_UP_RIGHT) {
+
+            if (xIndex < 4) {
+                newXindex = xIndex - 1;
+                newYindex = yIndex;
+            } else if (xIndex >= 4) {
+                newXindex = xIndex - 1;
+                newYindex = yIndex + 1;
+            }
+        } else if (direction == RayDirection.DIAGONAL_DOWN_RIGHT) {
+            if (xIndex < 4) {
+                newXindex = xIndex + 1;
+                newYindex = yIndex + 1;
+            } else if (xIndex >= 4) {
+                newXindex = xIndex + 1;
+                newYindex = yIndex;
+            }
+        } else if (direction == RayDirection.DIAGONAL_UP_LEFT) {
+            if (xIndex > 4) {
+                newXindex = xIndex - 1;
+                newYindex = yIndex;
+            } else if (xIndex < 4) {
+                newXindex = xIndex - 1;
+                newYindex = yIndex - 1;
+            }
+        } else if (direction == RayDirection.DIAGONAL_DOWN_LEFT) {
+            if (xIndex < 4) {
+                newXindex = xIndex + 1;
+                newYindex = yIndex;
+            } else if (xIndex >= 4) {
+                newXindex = xIndex + 1;
+                newYindex = yIndex - 1;
+            }
+        }
+        return new int[] {newXindex, newYindex};
+    }
+
+    private int checkAOFHit(int xIndex, int yIndex) {
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
-            int x = RootPane.getAtoms().get(2*i);
-            int y = RootPane.getAtoms().get(2*i+1);
+            if ((HexBoard.getHexBoard().get(RootPane.getAtoms().get(2*i)).get(RootPane.getAtoms().get(2*i+1)).getAreaOfInfluence() == null)) {
+            } else if (new Line(rayPath.get(rayPath.size()-1).getX(), rayPath.get(rayPath.size()-1).getY(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY()).intersects((HexBoard.getHexBoard().get(RootPane.getAtoms().get(2*i)).get(RootPane.getAtoms().get(2*i+1))).getAreaOfInfluence().getBoundsInLocal())) {
+                System.out.println("hits atom at: " + RootPane.getAtoms().get(2*i) + "," + RootPane.getAtoms().get(2*i+1));
+                return 1;
+            }
+        }
+//        System.out.println("no hit");
+        return 0;
+    }
 
-            System.out.println(this.getBoundsInLocal().intersects(HexBoard.getHexBoard().get(x).get(y).getBoundsInLocal()));
-//            System.out.println(this.getBoundsInLocal());
+    private void displayRay(Pane pane) {
+        for (int i = 0; i < rayPath.size()-1; i++) {
+            Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i+1).getX(), rayPath.get(i+1).getY());
+            toAdd.setStroke(Color.DEEPSKYBLUE);
+            toAdd.setStrokeWidth(5);
+            pane.getChildren().add(toAdd);
         }
     }
 
@@ -43,8 +131,10 @@ public class Ray extends Line
         button1.setLayoutX(490);
         button1.setLayoutY(HexBoard.getHexBoard().get(0).get(0).getCentreY()-10);
 
+        button1.setOnAction(event -> {
+            new Ray(0, 0, RayDirection.HORIZONTAL_RIGHT).displayRay(root);
 
-        button1.setOnAction(event -> new Ray(root, 0, 0, 0, 4));
+        });
         root.getChildren().add(button1);
 
 
@@ -56,8 +146,8 @@ public class Ray extends Line
     public static void drawButton2(Pane root)
     {
         Button button2 = new Button();
-        button2.setOnAction(event -> new Ray(root, 0, 0, 8, 4));
-        // evverytime shift start x shift end x
+        button2.setOnAction(event -> new Ray(0, 0, RayDirection.DIAGONAL_DOWN_RIGHT).displayRay(root));
+        // everytime shift start x shift end x
         root.getChildren().add(button2);
 
         button2.setShape(new Circle(r));
@@ -70,7 +160,7 @@ public class Ray extends Line
         Button button3 = new Button();
         button3.setLayoutX(20);
 
-        button3.setOnAction(event -> new Ray(root, 0, 0, 4, 0));
+        button3.setOnAction(event -> new Ray(0, 0, RayDirection.DIAGONAL_DOWN_LEFT).displayRay(root));
         // evverytime shift start x shift end x
 
         root.getChildren().add(button3);

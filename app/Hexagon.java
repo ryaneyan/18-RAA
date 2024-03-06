@@ -42,15 +42,17 @@ public class Hexagon extends Polygon {
     final private double centreX;
     final private double centreY;
     private boolean isAtom = false;
+    private Circle areaOfInfluence = null;
 
     public double getCentreX() {
         return centreX;
     }
-
     public double getCentreY() {
         return centreY;
     }
-
+    public Circle getAreaOfInfluence() {
+        return areaOfInfluence;
+    }
     public boolean isAtom() {
         return isAtom;
     }
@@ -59,7 +61,10 @@ public class Hexagon extends Polygon {
     public void convertToAtom(Pane pane) {
         isAtom = true;
         pane.getChildren().add(new Circle(centreX, centreY, ATOM_SIZE, Color.RED));
-        Circle areaOfInfluence = new Circle(centreX, centreY, X_DIFF);
+        setAreaOfInfluence(pane);
+    }
+    private void setAreaOfInfluence(Pane pane) {
+        areaOfInfluence = new Circle(centreX, centreY, X_DIFF);
         areaOfInfluence.setFill(Color.TRANSPARENT);
         areaOfInfluence.setStroke(Color.BLUE);
         areaOfInfluence.setMouseTransparent(true);
