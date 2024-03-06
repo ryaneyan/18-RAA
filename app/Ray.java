@@ -20,14 +20,15 @@ public class Ray extends Line
         // create and configure line using points
 
         super.setStroke(Color.rgb(96, 253, 253));
-        super.setStrokeWidth(5);
+        super.setStrokeWidth(1);
         root.getChildren().add(this);
 
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
             int x = RootPane.getAtoms().get(2*i);
             int y = RootPane.getAtoms().get(2*i+1);
 
-            System.out.println(this.intersects(HexBoard.getHexBoard().get(x).get(y).getBoundsInLocal()));
+            System.out.println(this.getBoundsInLocal().intersects(HexBoard.getHexBoard().get(x).get(y).getBoundsInLocal()));
+//            System.out.println(this.getBoundsInLocal());
         }
     }
 

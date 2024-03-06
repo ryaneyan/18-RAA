@@ -39,21 +39,21 @@ public class RootPane {
     private static void generateRandomAtoms(Pane root) {
         Random rand = new Random();
         int tally = 0;
-//        int x = 0, y = 1;
+        int x = 0, y = 1;
         while(tally < ATOMS_AMOUNT)
         {
-            int x = rand.nextInt(9);
-            int y = rand.nextInt(HexBoard.getHexBoard().get(x).size());
-//            int[] atomsTest = {3, 3, 5, 0, 0, 2, 6, 6, 1, 0, 1, 3};
-//            int j = atomsTest[x];
-//            int k = atomsTest[y];
+//            int x = rand.nextInt(9);
+//            int y = rand.nextInt(HexBoard.getHexBoard().get(x).size());
+            int[] atomsTest = {1, 1, 8, 3, 6, 3, 4, 0, 5, 3, 7, 2};
+            int j = atomsTest[x];
+            int k = atomsTest[y];
 
-            Hexagon current = HexBoard.getHexBoard().get(x).get(y);
+            Hexagon current = HexBoard.getHexBoard().get(j).get(k);
             if (current.isAtom()) {
                 continue;
             }
-            atoms.add(x);
-            atoms.add(y);
+            atoms.add(j);
+            atoms.add(k);
             current.convertToAtom(root);
 
 //                System.out.println("X: " + centerX + " Y: " + centerY); //just for debugging purposes
