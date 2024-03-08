@@ -6,6 +6,8 @@ import javafx.scene.shape.Circle;
 
 import java.util.List;
 
+import static app.Constants.*;
+
 public class HexagonButton {
 
     private static void setButtonActionAndAddToRoot(Pane root, Button button, int startX, int startY, int endX, int endY, RayDirection direction) {
@@ -24,39 +26,39 @@ public class HexagonButton {
         if (Flag == 1)
         {
             if ( (startY < 5 && startX == 0)) {
-                centerX += 25;
-                centerY -= 35;
+                centerX += HEX_OFFSET_X;
+                centerY -= HEX_OFFSET_Y + 20;
 
                 direction = RayDirection.DIAGONAL_DOWN_LEFT;
             }
             if ( (startX == 1||startX == 2||startX == 3||startX == 4) && startY == 0) {
-                centerX -= 50;
-                centerY += 5;
+                centerX -= HEX_RADIUS;
+                centerY += HEX_OFFSET_Y -10;
 
                 direction = RayDirection.HORIZONTAL_RIGHT;
             }
             if ( (startY == 0 && startX > 4) && !(startY == 0 && startX == 8)) {
-                centerX -= 50;
-                centerY += 15;
+                centerX -= RADIUS + 10;
+                centerY += HEX_OFFSET_Y;
 
                 direction = RayDirection.HORIZONTAL_RIGHT;
             }
             if (startX == 8 && startY < 5) {
-                centerX += 25;
-                centerY += 55;
+                centerX += HEX_OFFSET_X;
+                centerY += HEX_RADIUS;
 
                 direction = RayDirection.DIAGONAL_UP_LEFT;
             }
             if (!(startX == 0 && startY == 4) && !(startX == 8 && startY == 4)) {
                 if (startY == HexBoard.getHexBoard().get(startX).size() - 1 && startX > 4) {
-                    centerX += 50;
-                    centerY += 15;
+                    centerX += HEX_RADIUS;
+                    centerY += HEX_OFFSET_Y;
 
                     direction = RayDirection.HORIZONTAL_LEFT;
                 }
                 if (startY == HexBoard.getHexBoard().get(startX).size() - 1 && startX < 5) {
-                    centerX += 50;
-                    centerY += 5;
+                    centerX += HEX_RADIUS;
+                    centerY += HEX_OFFSET_Y - 10;
 
                     direction = RayDirection.HORIZONTAL_LEFT;
                 }
@@ -66,43 +68,43 @@ public class HexagonButton {
         {
             if (startX == 0 && startY == 0)
             {
-                centerX -= 50;
-                centerY += 5;
+                centerX -= HEX_RADIUS;
+                centerY += HEX_OFFSET_Y -10;
 
                 direction = RayDirection.HORIZONTAL_RIGHT;
             }
             if (startX == 0 && startY == 4)
             {
-                centerX += 50;
-                centerY += 5;
+                centerX += HEX_RADIUS;
+                centerY += HEX_OFFSET_Y - 10;
 
                 direction = RayDirection.HORIZONTAL_LEFT;
             }
             if (startX == 4 && startY == 0)
             {
-                centerX -= 25;
-                centerY += 50;
+                centerX -= HEX_OFFSET_X;
+                centerY += HEX_RADIUS;
 
                 direction = RayDirection.DIAGONAL_UP_RIGHT;
             }
             if (startX == 4 && startY == 8)
             {
-                centerX += 25;
-                centerY += 50;
+                centerX += HEX_OFFSET_X;
+                centerY += HEX_RADIUS;
 
                 direction = RayDirection.DIAGONAL_UP_LEFT;
             }
             if (startX == 8 && startY == 0)
             {
-                centerX -= 50;
-                centerY += 15;
+                centerX -= HEX_RADIUS;
+                centerY += HEX_OFFSET_Y;
 
                 direction = RayDirection.HORIZONTAL_RIGHT;
             }
             if (startX == 8 && startY == 4)
             {
-                centerX += 50;
-                centerY += 15;
+                centerX += HEX_RADIUS;
+                centerY += HEX_OFFSET_Y;
 
                 direction = RayDirection.HORIZONTAL_LEFT;
             }
@@ -111,33 +113,33 @@ public class HexagonButton {
 
         else {
             if (startY == 0 && startX < 5 || startX == 0) {
-                centerX -= 25;
-                centerY -= 35;
+                centerX -= HEX_OFFSET_X;
+                centerY -= HEX_OFFSET_Y + 20;
 
                 direction = RayDirection.DIAGONAL_DOWN_RIGHT;
             }
             if (startY == 0 && startX > 4) {
-                centerX -= 25;
-                centerY += 55;
+                centerX -= HEX_OFFSET_X;
+                centerY += HEX_RADIUS;
 
                 direction = RayDirection.DIAGONAL_UP_RIGHT;
             }
             if (startX == 8 && startY > 0) {
-                centerX -= 25;
-                centerY += 55;
+                centerX -= HEX_OFFSET_X;
+                centerY += HEX_RADIUS;
 
                 direction = RayDirection.DIAGONAL_UP_RIGHT;
             }
             if (!(startX == 0 && startY == 4) && !(startX == 8 && startY == 4)) {
                 if (startY == HexBoard.getHexBoard().get(startX).size() - 1 && startX > 4) {
-                    centerX += 25;
-                    centerY += 55;
+                    centerX += HEX_OFFSET_X;
+                    centerY += HEX_RADIUS;
 
                     direction = RayDirection.DIAGONAL_UP_LEFT;
                 }
                 if (startY == HexBoard.getHexBoard().get(startX).size() - 1 && startX < 5) {
-                    centerX += 25;
-                    centerY -= 35;
+                    centerX += HEX_OFFSET_X;
+                    centerY -= HEX_OFFSET_Y + 20;
 
                     direction = RayDirection.DIAGONAL_DOWN_LEFT;
                 }
@@ -145,7 +147,7 @@ public class HexagonButton {
         }
 
         Button button = new Button();
-        double buttonRadius = Constants.RADIUS / 4;
+        double buttonRadius = (RADIUS / 4) - 2;
         button.setShape(new Circle(buttonRadius));
         button.setLayoutX(centerX - buttonRadius);
         button.setLayoutY(centerY - buttonRadius);

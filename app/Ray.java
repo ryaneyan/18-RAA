@@ -32,7 +32,7 @@ public class Ray {
             double centerX = HexBoard.getHexBoard().get(X).get(Y).getCentreX();
             double centerY = HexBoard.getHexBoard().get(X).get(Y).getCentreY();
 
-            rayPath.add(new Point2D(centerX - X_DIFF/2, centerY));
+//            rayPath.add(new Point2D(centerX - X_DIFF/2, centerY));
             rayPath.add(new Point2D(centerX, centerY));
             extendRay(X, Y, direction);
 
@@ -88,7 +88,7 @@ public class Ray {
             if (xIndex > 4) {
                 newXindex = xIndex - 1;
                 newYindex = yIndex;
-            } else if (xIndex < 4) {
+            } else if (xIndex <= 4) {
                 newXindex = xIndex - 1;
                 newYindex = yIndex - 1;
             }
