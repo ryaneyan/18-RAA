@@ -24,14 +24,15 @@ public class Game extends Application {
 
 
 
-//        Pane welcome = WelcomePane.generateWelcomePane();
+        Pane welcome = WelcomePane.generateWelcomePane();
         Pane root = RootPane.generateRootPane();
+        HexagonButton.createButtons(root);
+
 
         Scene main = new Scene(root);
 
         stage.setScene(main);
         stage.setMaximized(true);
-
 
         stage.setMaximized(true);
         stage.setTitle("BlackBox+");

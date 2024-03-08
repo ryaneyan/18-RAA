@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
-
+import javafx.scene.control.Label;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +28,14 @@ public class Ray {
 
     public Ray(int X, int Y, RayDirection direction)
     {
-        rayPath.add(new Point2D(HexBoard.getHexBoard().get(X).get(Y).getCentreX()-X_DIFF/2, HexBoard.getHexBoard().get(0).get(0).getCentreY()));
-        rayPath.add(new Point2D(HexBoard.getHexBoard().get(X).get(Y).getCentreX(), HexBoard.getHexBoard().get(0).get(0).getCentreY()));
-        extendRay(X, Y, direction);
+
+            double centerX = HexBoard.getHexBoard().get(X).get(Y).getCentreX();
+            double centerY = HexBoard.getHexBoard().get(X).get(Y).getCentreY();
+
+            rayPath.add(new Point2D(centerX - X_DIFF/2, centerY));
+            rayPath.add(new Point2D(centerX, centerY));
+            extendRay(X, Y, direction);
+
     }
 
     private void extendRay(int xIndex, int yIndex, RayDirection direction) {
@@ -38,17 +43,17 @@ public class Ray {
         int newYindex = determineNewIndexes(xIndex, yIndex, direction)[1];
 
         try {
-            HexBoard.getHexBoard().get(newXindex).get(newYindex);
+            Hexagon hex = HexBoard.getHexBoard().get(newXindex).get(newYindex);
         } catch (IndexOutOfBoundsException exception){
             return;
         }
 
+        rayPath.add(new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY()));
+
         if (checkAOFHit(newXindex, newYindex) == 1) {
-            // BOUNCE LOGIC
+            // Handle hit (e.g., bounce logic)
             return;
         }
-
-        rayPath.add(new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY()));
 
         extendRay(newXindex, newYindex, direction);
     }
@@ -107,11 +112,10 @@ public class Ray {
                 return 1;
             }
         }
-//        System.out.println("no hit");
         return 0;
     }
 
-    private void displayRay(Pane pane) {
+    void displayRay(Pane pane) {
         for (int i = 0; i < rayPath.size()-1; i++) {
             Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i+1).getX(), rayPath.get(i+1).getY());
             toAdd.setStroke(Color.DEEPSKYBLUE);
@@ -119,57 +123,4 @@ public class Ray {
             pane.getChildren().add(toAdd);
         }
     }
-
-
-    // examples
-
-    static double r=10;
-
-    public static void drawButton1(Pane root)
-    {
-        Button button1 = new Button();
-        button1.setLayoutX(490);
-        button1.setLayoutY(HexBoard.getHexBoard().get(0).get(0).getCentreY()-10);
-
-        button1.setOnAction(event -> {
-            new Ray(0, 0, RayDirection.HORIZONTAL_RIGHT).displayRay(root);
-
-        });
-        root.getChildren().add(button1);
-
-
-        button1.setShape(new Circle(r));
-        button1.setMinSize(2*r, 2*r);
-        button1.setMaxSize(2*r, 2*r);
-    }
-
-    public static void drawButton2(Pane root)
-    {
-        Button button2 = new Button();
-        button2.setOnAction(event -> new Ray(0, 0, RayDirection.DIAGONAL_DOWN_RIGHT).displayRay(root));
-        // everytime shift start x shift end x
-        root.getChildren().add(button2);
-
-        button2.setShape(new Circle(r));
-        button2.setMinSize(2*r, 2*r);
-        button2.setMaxSize(2*r, 2*r);
-    }
-
-    public static void drawButton3(Pane root)
-    {
-        Button button3 = new Button();
-        button3.setLayoutX(20);
-
-        button3.setOnAction(event -> new Ray(0, 0, RayDirection.DIAGONAL_DOWN_LEFT).displayRay(root));
-        // evverytime shift start x shift end x
-
-        root.getChildren().add(button3);
-
-        button3.setShape(new Circle(r));
-        button3.setMinSize(2*r, 2*r);
-        button3.setMaxSize(2*r, 2*r);
-    }
-
-    //going to need 55 buttons
-
 }
