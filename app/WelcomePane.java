@@ -25,9 +25,6 @@ public class WelcomePane {
         welcomeText.setLayoutY(450);
         welcomePane.getChildren().add(welcomeText);
 
-        welcomePane.setOnMouseClicked(mouseEvent -> {
-            welcomePane.getScene().setRoot(RootPane.generateRootPane());
-        });
 
         return welcomePane;
     }

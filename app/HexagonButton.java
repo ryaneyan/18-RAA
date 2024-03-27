@@ -10,7 +10,8 @@ import static app.Constants.*;
 
 public class HexagonButton {
 
-    private static void setButtonActionAndAddToRoot(Pane root, Button button, int startX, int startY, int endX, int endY, RayDirection direction) {
+    private static void setButtonActionAndAddToRoot(Pane root, Button button, int startX, int startY, int endX, int endY, RayDirection direction)
+    {
         button.setOnAction(event -> {
             new Ray(startX, startY, direction).displayRay(root);
         });
