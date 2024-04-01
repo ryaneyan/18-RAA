@@ -69,12 +69,12 @@ public class Ray {
             newYindex = yIndex - 1;
         } else if (direction == RayDirection.DIAGONAL_UP_RIGHT) {
 
-            if (xIndex < 4) {
-                newXindex = xIndex - 1;
-                newYindex = yIndex;
-            } else if (xIndex >= 4) {
+            if (xIndex > 4) {
                 newXindex = xIndex - 1;
                 newYindex = yIndex + 1;
+            } else if (xIndex <= 4) {
+                newXindex = xIndex - 1;
+                newYindex = yIndex;
             }
         } else if (direction == RayDirection.DIAGONAL_DOWN_RIGHT) {
             if (xIndex < 4) {
@@ -92,6 +92,7 @@ public class Ray {
                 newXindex = xIndex - 1;
                 newYindex = yIndex - 1;
             }
+
         } else if (direction == RayDirection.DIAGONAL_DOWN_LEFT) {
             if (xIndex < 4) {
                 newXindex = xIndex + 1;
@@ -134,8 +135,8 @@ public class Ray {
                     }
                     break;
                 case DIAGONAL_UP_RIGHT:
-                    if ((xIndex < 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex) ||
-                            (xIndex >= 4 && xIndex - 1 == atomXIndex && yIndex + 1 == atomYIndex)) {
+                    if ((xIndex > 4 && xIndex - 1 == atomXIndex && yIndex + 1 == atomYIndex) ||
+                            (xIndex <= 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex)) {
                         System.out.println("Direct hit");
                     }
                     break;
@@ -161,6 +162,14 @@ public class Ray {
         }
 
     }
+
+    // may use this later
+//    private void extendRayPath(int xIndex, int yIndex, RayDirection direction) {
+//        // Add a point slightly beyond the point of impact to the ray's path
+//        double extensionX = HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX() + (3 * 20);
+//        double extensionY = HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY() + (3 * 0.1);
+//        rayPath.add(new Point2D(extensionX, extensionY));
+//    }
 
     void displayRay(Pane pane) {
         for (int i = 0; i < rayPath.size()-1; i++) {
