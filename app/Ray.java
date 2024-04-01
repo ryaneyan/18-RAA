@@ -3,14 +3,10 @@ package app;
 import static app.Constants.*;
 
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
-import javafx.scene.control.Label;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,13 +44,17 @@ public class Ray {
             return;
         }
 
+        Point2D currentPos = new Point2D(HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY());
+        Point2D nextPos = new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY());
+
         rayPath.add(new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY()));
 
-        if (checkAOFHit(newXindex, newYindex) == 1) {
+        if (checkAOFHit(newXindex, newYindex, direction) == 1) {
             // Handle hit (e.g., bounce logic)
             return;
         }
 
+        rayPath.add(nextPos);
         extendRay(newXindex, newYindex, direction);
     }
 
@@ -104,15 +104,62 @@ public class Ray {
         return new int[] {newXindex, newYindex};
     }
 
-    private int checkAOFHit(int xIndex, int yIndex) {
+    private int checkAOFHit(int xIndex, int yIndex, RayDirection direction) {
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
             if ((HexBoard.getHexBoard().get(RootPane.getAtoms().get(2*i)).get(RootPane.getAtoms().get(2*i+1)).getAreaOfInfluence() == null)) {
-            } else if (new Line(rayPath.get(rayPath.size()-1).getX(), rayPath.get(rayPath.size()-1).getY(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY()).intersects((HexBoard.getHexBoard().get(RootPane.getAtoms().get(2*i)).get(RootPane.getAtoms().get(2*i+1))).getAreaOfInfluence().getBoundsInLocal())) {
+            }
+            else if (new Line(rayPath.get(rayPath.size()-1).getX(), rayPath.get(rayPath.size()-1).getY(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY()).intersects((HexBoard.getHexBoard().get(RootPane.getAtoms().get(2*i)).get(RootPane.getAtoms().get(2*i+1))).getAreaOfInfluence().getBoundsInLocal())) {
+                checkDirectHit(xIndex, yIndex, direction);
                 System.out.println("hits atom at: " + RootPane.getAtoms().get(2*i) + "," + RootPane.getAtoms().get(2*i+1));
                 return 1;
             }
         }
         return 0;
+    }
+
+    private void checkDirectHit(int xIndex, int yIndex, RayDirection direction) {
+        for (int i = 0; i < RootPane.getAtoms().size(); i += 2) {
+            int atomXIndex = RootPane.getAtoms().get(i);
+            int atomYIndex = RootPane.getAtoms().get(i + 1);
+
+            switch (direction) {
+                case HORIZONTAL_RIGHT:
+                    if (yIndex + 1 == atomYIndex && xIndex == atomXIndex) {
+                        System.out.println("Direct hit");
+                    }
+                    break;
+                case HORIZONTAL_LEFT:
+                    if (yIndex - 1 == atomYIndex && xIndex == atomXIndex) {
+                        System.out.println("Direct hit");
+                    }
+                    break;
+                case DIAGONAL_UP_RIGHT:
+                    if ((xIndex < 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex) ||
+                            (xIndex >= 4 && xIndex - 1 == atomXIndex && yIndex + 1 == atomYIndex)) {
+                        System.out.println("Direct hit");
+                    }
+                    break;
+                case DIAGONAL_DOWN_RIGHT:
+                    if ((xIndex < 4 && xIndex + 1 == atomXIndex && yIndex + 1 == atomYIndex) ||
+                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex)) {
+                        System.out.println("Direct hit");
+                    }
+                    break;
+                case DIAGONAL_UP_LEFT:
+                    if ((xIndex > 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex) ||
+                            (xIndex <= 4 && xIndex - 1 == atomXIndex && yIndex - 1 == atomYIndex)) {
+                        System.out.println("Direct hit");
+                    }
+                    break;
+                case DIAGONAL_DOWN_LEFT:
+                    if ((xIndex < 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex) ||
+                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex - 1 == atomYIndex)) {
+                        System.out.println("Direct hit");
+                    }
+                    break;
+            }
+        }
+
     }
 
     void displayRay(Pane pane) {
