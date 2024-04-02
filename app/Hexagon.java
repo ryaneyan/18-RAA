@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static app.Constants.*;
@@ -67,7 +68,9 @@ public class Hexagon extends Polygon {
         areaOfInfluence = new Circle(centreX, centreY, X_DIFF);
         areaOfInfluence.setFill(Color.TRANSPARENT);
         areaOfInfluence.setStroke(Color.BLUE);
-        areaOfInfluence.setMouseTransparent(true);
+        areaOfInfluence.setStrokeType(StrokeType.OUTSIDE); // Set the stroke type to outside
+
+        areaOfInfluence.getStrokeDashArray().addAll(5d, 10d);
         pane.getChildren().add(areaOfInfluence);
     }
 }

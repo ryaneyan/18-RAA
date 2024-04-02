@@ -5,6 +5,7 @@ import static app.WelcomePane.generateWelcomePane;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -32,12 +33,15 @@ public class Game extends Application {
             HexBoard.generateBoard();
             Pane rootPane = RootPane.generateRootPane();
             HexagonButton.createButtons(rootPane);
+//            NumberedHexagonButton.createButtons(rootPane);
+
+            Button toggleButton = createVisibilityButton(rootPane);
+            rootPane.getChildren().add(toggleButton);
 
             Scene mainScene = new Scene(rootPane); // Adjust width and height as needed
 
             stage.setScene(mainScene);
             stage.setMaximized(true);
-
         });
 
 
@@ -45,6 +49,24 @@ public class Game extends Application {
         stage.show();
     }
 
+    public static void toggleVisibility(Pane pane)
+    {
+        for (javafx.scene.Node node : pane.getChildren()) {
+
+            if (node instanceof Hexagon || node instanceof Button || node instanceof Text)
+            {
+                continue;
+            }
+            node.setVisible(!node.isVisible());
+        }
+    }
+
+    public static Button createVisibilityButton(Pane pane)
+    {
+        Button toggleButton = new Button("Visibility");
+        toggleButton.setOnAction(event -> toggleVisibility(pane));
+        return toggleButton;
+    }
 
 
     public static void main(String[] args) {
