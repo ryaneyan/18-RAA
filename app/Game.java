@@ -33,7 +33,7 @@ public class Game extends Application {
             HexBoard.generateBoard();
             Pane rootPane = RootPane.generateRootPane();
             HexagonButton.createButtons(rootPane);
-//            NumberedHexagonButton.createButtons(rootPane);
+            NumberedHexagonButton.createButtons(rootPane);
 
             Button toggleButton = createVisibilityButton(rootPane);
             rootPane.getChildren().add(toggleButton);

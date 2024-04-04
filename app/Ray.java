@@ -48,24 +48,66 @@ public class Ray {
         Point2D nextPos = new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY());
 
         rayPath.add(new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY()));
+        RayDirection nextDirection = direction; // Initialize with current direction
 
         if (checkAOFHit(newXindex, newYindex, direction) == 1) {
-            switch (direction) {
-                case DIAGONAL_DOWN_LEFT:
-                    direction = RayDirection.DIAGONAL_DOWN_RIGHT;
-                    break;
-                case DIAGONAL_UP_LEFT:
-                    direction = RayDirection.DIAGONAL_UP_RIGHT;
-                    break;
-                case DIAGONAL_UP_RIGHT:
-                    direction = RayDirection.DIAGONAL_UP_LEFT;
-                    break;
-                case DIAGONAL_DOWN_RIGHT:
-                    direction = RayDirection.DIAGONAL_DOWN_LEFT;
-                    break;
-                default:
-                    // Optionally handle unexpected direction
-                    return;
+            for (int i = 0; i < RootPane.getAtoms().size(); i += 2) {
+                int atomXIndex = RootPane.getAtoms().get(i);
+                int atomYIndex = RootPane.getAtoms().get(i + 1);
+
+                switch (direction) {
+                    case DIAGONAL_DOWN_LEFT:
+                        if (xIndex + 1 == atomXIndex)
+                        {
+                            nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
+                        }
+                        if (xIndex + 2 == atomXIndex && yIndex + 1 == atomYIndex || xIndex + 2 == atomXIndex && yIndex == atomYIndex) {
+                            nextDirection = RayDirection.HORIZONTAL_LEFT;
+                        }
+                        break;
+                    case DIAGONAL_UP_LEFT:
+                        if (xIndex - 1 == atomXIndex) {
+                            nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
+                        }
+                        if (xIndex - 2 == atomXIndex && yIndex - 1 == atomYIndex || xIndex - 2 == atomXIndex && yIndex == atomYIndex || xIndex - 2 == atomXIndex && yIndex + 1 == atomYIndex) {
+                            nextDirection = RayDirection.HORIZONTAL_LEFT;
+                        }
+                        break;
+                    case DIAGONAL_UP_RIGHT:
+                        if (xIndex - 1 == atomXIndex) {
+                            nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                        }
+                        if (xIndex - 2 == atomXIndex && yIndex + 1 == atomYIndex || xIndex - 2 == atomXIndex && yIndex == atomYIndex || xIndex - 2 == atomXIndex && yIndex - 1 == atomYIndex) {
+                            nextDirection = RayDirection.HORIZONTAL_RIGHT;
+                        }
+                        break;
+                    case DIAGONAL_DOWN_RIGHT:
+                        if (xIndex + 1 == atomXIndex) {
+                            nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
+                        }
+                        if (xIndex + 2 == atomXIndex && yIndex + 1 == atomYIndex || xIndex + 2 == atomXIndex && yIndex == atomYIndex) {
+                            nextDirection = RayDirection.HORIZONTAL_RIGHT;
+                        }
+                        break;
+                    case HORIZONTAL_RIGHT:
+                        if (xIndex + 1 == atomXIndex) {
+                            nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
+                        }
+                        else if (xIndex - 1 == atomXIndex) {
+                            nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
+                        }
+                        break;
+                    case HORIZONTAL_LEFT:
+                        if (xIndex + 1 == atomXIndex) {
+                            nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                        }
+                        else if (xIndex - 1 == atomXIndex) {
+                            nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
+                        }
+                        break;
+                    default:
+                        return;
+                }
             }
         }
         else if (checkAOFHit(newXindex, newYindex, direction) == 2) {
@@ -75,7 +117,7 @@ public class Ray {
         }
 
         rayPath.add(nextPos);
-        extendRay(newXindex, newYindex, direction);
+        extendRay(newXindex, newYindex, nextDirection);
     }
 
     private int[] determineNewIndexes(int xIndex, int yIndex, RayDirection direction) {
