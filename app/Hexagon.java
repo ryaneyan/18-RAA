@@ -1,6 +1,7 @@
 package app;
 
 
+import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -24,9 +25,10 @@ public class Hexagon extends Polygon {
 
         for (int i = 0; i < NUM_OF_SIDES; i++, angle += angleDegreeChange) {
 
-            points[i] = Math.sin(angle) * radius + centreX;
-            points[i*2+1] = Math.cos(angle) * radius + centreY;
-            super.getPoints().addAll(points[i], points[i*2+1]);
+            double x = Math.sin(angle) * radius + centreX;
+            double y = Math.cos(angle) * radius + centreY;
+            pointsArray[i] = new Point2D(x, y);
+            super.getPoints().addAll(x, y);
         }
         super.setStroke(Color.YELLOW);
         super.setStrokeWidth(3);
@@ -39,7 +41,7 @@ public class Hexagon extends Polygon {
             Hexagon.super.setStroke(Color.YELLOW);
         });
     }
-    double[] points = new double[12];
+    private Point2D[] pointsArray = new Point2D[6];
     final private double centreX;
     final private double centreY;
     private boolean isAtom = false;
@@ -58,6 +60,9 @@ public class Hexagon extends Polygon {
         return isAtom;
     }
 
+    public Point2D[] getPointsArray() {
+        return pointsArray;
+    }
 
     public void convertToAtom(Pane pane) {
         isAtom = true;

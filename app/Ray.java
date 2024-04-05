@@ -1,7 +1,6 @@
 package app;
 
 import static app.Constants.*;
-import static app.RootPane.getAtoms;
 
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;

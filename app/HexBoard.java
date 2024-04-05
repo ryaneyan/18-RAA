@@ -32,4 +32,8 @@ public class HexBoard {
         if (hexBoard == null) generateBoard();
         return hexBoard;
     }
+
+    public static Hexagon getHexagon(int x, int y) {
+        return hexBoard.get(x).get(y);
+    }
 }
