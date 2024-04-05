@@ -1,6 +1,7 @@
 package app;
 
 import static app.Constants.*;
+import static app.RootPane.getAtoms;
 
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
@@ -51,63 +52,65 @@ public class Ray {
         RayDirection nextDirection = direction; // Initialize with current direction
 
         if (checkAOFHit(newXindex, newYindex, direction) == 1) {
-            for (int i = 0; i < RootPane.getAtoms().size(); i += 2) {
-                int atomXIndex = RootPane.getAtoms().get(i);
-                int atomYIndex = RootPane.getAtoms().get(i + 1);
 
                 switch (direction) {
                     case DIAGONAL_DOWN_LEFT:
-                        if (xIndex + 1 == atomXIndex)
+                        System.out.println(newXindex + "," + newYindex);
+                        //newXindex == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()
+                        if (getAtoms().contains(newXindex) && getAtoms().contains(newYindex - 1))
                         {
                             nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                         }
-                        if (xIndex + 2 == atomXIndex && yIndex + 1 == atomYIndex || xIndex + 2 == atomXIndex && yIndex == atomYIndex) {
+                        else {
                             nextDirection = RayDirection.HORIZONTAL_LEFT;
                         }
                         break;
                     case DIAGONAL_UP_LEFT:
-                        if (xIndex - 1 == atomXIndex) {
+                        if (newXindex == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
                         }
-                        if (xIndex - 2 == atomXIndex && yIndex - 1 == atomYIndex || xIndex - 2 == atomXIndex && yIndex == atomYIndex || xIndex - 2 == atomXIndex && yIndex + 1 == atomYIndex) {
+                        else {
                             nextDirection = RayDirection.HORIZONTAL_LEFT;
                         }
                         break;
                     case DIAGONAL_UP_RIGHT:
-                        if (xIndex - 1 == atomXIndex) {
+                        //newXindex == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY()
+                        if (newXindex == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                         }
-                        if (xIndex - 2 == atomXIndex && yIndex + 1 == atomYIndex || xIndex - 2 == atomXIndex && yIndex == atomYIndex || xIndex - 2 == atomXIndex && yIndex - 1 == atomYIndex) {
+                        else {
                             nextDirection = RayDirection.HORIZONTAL_RIGHT;
                         }
                         break;
                     case DIAGONAL_DOWN_RIGHT:
-                        if (xIndex + 1 == atomXIndex) {
+
+                        if (newXindex == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
                         }
-                        if (xIndex + 2 == atomXIndex && yIndex + 1 == atomYIndex || xIndex + 2 == atomXIndex && yIndex == atomYIndex) {
+                        else {
                             nextDirection = RayDirection.HORIZONTAL_RIGHT;
                         }
                         break;
                     case HORIZONTAL_RIGHT:
-                        if (xIndex + 1 == atomXIndex) {
+                        System.out.println(xIndex + "," + yIndex);
+                        if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
                         }
-                        else if (xIndex - 1 == atomXIndex) {
+                        else {
                             nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                         }
                         break;
                     case HORIZONTAL_LEFT:
-                        if (xIndex + 1 == atomXIndex) {
+                        System.out.println(xIndex + "," + yIndex);
+                        if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                         }
-                        else if (xIndex - 1 == atomXIndex) {
+                        else {
                             nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
                         }
                         break;
                     default:
                         return;
-                }
             }
         }
         else if (checkAOFHit(newXindex, newYindex, direction) == 2) {
@@ -167,13 +170,17 @@ public class Ray {
         return new int[] {newXindex, newYindex};
     }
 
+    private Point2D hitAtomCoordinates; // Store the coordinates of the hit atom
+
     private int checkAOFHit(int xIndex, int yIndex, RayDirection direction) {
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
-            if ((HexBoard.getHexBoard().get(RootPane.getAtoms().get(2*i)).get(RootPane.getAtoms().get(2*i+1)).getAreaOfInfluence() == null)) {
+            if ((HexBoard.getHexBoard().get(getAtoms().get(2*i)).get(getAtoms().get(2*i+1)).getAreaOfInfluence() == null)) {
             }
-            else if (new Line(rayPath.get(rayPath.size()-1).getX(), rayPath.get(rayPath.size()-1).getY(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY()).intersects((HexBoard.getHexBoard().get(RootPane.getAtoms().get(2*i)).get(RootPane.getAtoms().get(2*i+1))).getAreaOfInfluence().getBoundsInLocal())) {
+            else if (new Line(rayPath.get(rayPath.size()-1).getX(), rayPath.get(rayPath.size()-1).getY(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY()).intersects((HexBoard.getHexBoard().get(getAtoms().get(2*i)).get(getAtoms().get(2*i+1))).getAreaOfInfluence().getBoundsInLocal())) {
                 int directHitCheck = checkDirectHit(xIndex, yIndex, direction);
-                System.out.println("hits atom at: " + RootPane.getAtoms().get(2*i) + "," + RootPane.getAtoms().get(2*i+1));
+                System.out.println("hits atom at: " + getAtoms().get(2*i) + "," + getAtoms().get(2*i+1));
+
+                hitAtomCoordinates = new Point2D(getAtoms().get(2*i), getAtoms().get(2*i+1));
 
                 if (directHitCheck == 2) {
                     return 2;
@@ -187,9 +194,9 @@ public class Ray {
     }
 
     private int checkDirectHit(int xIndex, int yIndex, RayDirection direction) {
-        for (int i = 0; i < RootPane.getAtoms().size(); i += 2) {
-            int atomXIndex = RootPane.getAtoms().get(i);
-            int atomYIndex = RootPane.getAtoms().get(i + 1);
+        for (int i = 0; i < getAtoms().size(); i += 2) {
+            int atomXIndex = getAtoms().get(i);
+            int atomYIndex = getAtoms().get(i + 1);
 
             switch (direction) {
                 case HORIZONTAL_RIGHT:
