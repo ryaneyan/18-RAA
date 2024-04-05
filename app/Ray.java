@@ -3,10 +3,14 @@ package app;
 import static app.Constants.*;
 
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-
+import javafx.scene.shape.Shape;
+import javafx.scene.control.Label;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +33,7 @@ public class Ray {
             double centerY = HexBoard.getHexBoard().get(X).get(Y).getCentreY();
 
 //            rayPath.add(new Point2D(centerX - X_DIFF/2, centerY));
+            setFirstPosition(X, Y, direction);
             rayPath.add(new Point2D(centerX, centerY));
             extendRay(X, Y, direction);
 
@@ -41,6 +46,7 @@ public class Ray {
         try {
             Hexagon hex = HexBoard.getHexBoard().get(newXindex).get(newYindex);
         } catch (IndexOutOfBoundsException exception){
+            setFirstPosition(xIndex, yIndex, getOppositeDirection(direction));
             return;
         }
 
@@ -131,12 +137,12 @@ public class Ray {
             newYindex = yIndex - 1;
         } else if (direction == RayDirection.DIAGONAL_UP_RIGHT) {
 
-            if (xIndex > 4) {
-                newXindex = xIndex - 1;
-                newYindex = yIndex + 1;
-            } else if (xIndex <= 4) {
+            if (xIndex <= 4) {
                 newXindex = xIndex - 1;
                 newYindex = yIndex;
+            } else if (xIndex > 4) {
+                newXindex = xIndex - 1;
+                newYindex = yIndex + 1;
             }
         } else if (direction == RayDirection.DIAGONAL_DOWN_RIGHT) {
             if (xIndex < 4) {
@@ -154,7 +160,6 @@ public class Ray {
                 newXindex = xIndex - 1;
                 newYindex = yIndex - 1;
             }
-
         } else if (direction == RayDirection.DIAGONAL_DOWN_LEFT) {
             if (xIndex < 4) {
                 newXindex = xIndex + 1;
@@ -241,11 +246,49 @@ public class Ray {
             toAdd.setStroke(Color.DEEPSKYBLUE);
             toAdd.setStrokeWidth(5);
             pane.getChildren().add(toAdd);
-
-//            if (!rayPath.isEmpty()) {
-//                Point2D lastPoint = rayPath.get(rayPath.size() - 1);
-//                System.out.println("Last Point: (" + lastPoint.getX() + ", " + lastPoint.getY() + ")");
-//            }
         }
+    }
+
+    private void setFirstPosition(int X, int Y, RayDirection direction) {
+        Hexagon current = HexBoard.getHexagon(X, Y);
+        Point2D[] points = current.getPointsArray();
+        switch (direction) {
+            case HORIZONTAL_RIGHT: rayPath.add(getMidpoint(points[4], points[5]));
+            break;
+
+            case HORIZONTAL_LEFT: rayPath.add(getMidpoint(points[1], points[2]));
+            break;
+
+            case DIAGONAL_DOWN_LEFT: rayPath.add(getMidpoint(points[0], points[1]));
+            break;
+
+            case DIAGONAL_DOWN_RIGHT: rayPath.add(getMidpoint(points[5], points[0]));
+            break;
+
+            case DIAGONAL_UP_LEFT: rayPath.add(getMidpoint(points[2], points[3]));
+            break;
+
+            case DIAGONAL_UP_RIGHT: rayPath.add(getMidpoint(points[3], points[4]));
+            break;
+
+            default:
+                throw new IllegalArgumentException("no such ray direction");
+        }
+    }
+    private RayDirection getOppositeDirection(RayDirection direction) {
+        return switch (direction) {
+            case HORIZONTAL_RIGHT -> RayDirection.HORIZONTAL_LEFT;
+            case HORIZONTAL_LEFT -> RayDirection.HORIZONTAL_RIGHT;
+            case DIAGONAL_DOWN_LEFT -> RayDirection.DIAGONAL_UP_RIGHT;
+            case DIAGONAL_DOWN_RIGHT -> RayDirection.DIAGONAL_UP_LEFT;
+            case DIAGONAL_UP_LEFT -> RayDirection.DIAGONAL_DOWN_RIGHT;
+            case DIAGONAL_UP_RIGHT -> RayDirection.DIAGONAL_DOWN_LEFT;
+        };
+    }
+
+    private Point2D getMidpoint(Point2D start, Point2D end) {
+        double midX = (start.getX() + end.getX()) / 2;
+        double midY = (start.getY() + end.getY()) / 2;
+        return new Point2D(midX, midY);
     }
 }

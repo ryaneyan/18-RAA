@@ -24,11 +24,11 @@ public class Game extends Application {
     public void start(Stage stage) {
 
         Pane welcomePane = WelcomePane.generateWelcomePane();
-        Scene welcomeScene = new Scene(welcomePane); // Adjust width and height as needed
-        stage.setScene(welcomeScene);
+        Scene main = new Scene(welcomePane); // Adjust width and height as needed
+        stage.setScene(main);
         stage.setMaximized(true);
 
-        welcomeScene.setOnMouseClicked(e -> {
+        main.setOnMouseClicked(e -> {
 // generates the board and buttons at the same time
             HexBoard.generateBoard();
             Pane rootPane = RootPane.generateRootPane();
@@ -38,10 +38,7 @@ public class Game extends Application {
             Button toggleButton = createVisibilityButton(rootPane);
             rootPane.getChildren().add(toggleButton);
 
-            Scene mainScene = new Scene(rootPane); // Adjust width and height as needed
-
-            stage.setScene(mainScene);
-            stage.setMaximized(true);
+            main.setRoot(rootPane);
         });
 
 
