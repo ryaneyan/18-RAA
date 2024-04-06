@@ -1,6 +1,7 @@
 package app;
 
 import static app.Constants.*;
+import static app.RootPane.getAtoms;
 
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
@@ -61,6 +62,10 @@ public class Ray {
                         {
                             nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                         }
+                        else if (checkAtomAtPosition(hitAtomCoordinates.getX(), hitAtomCoordinates.getY() + 1))
+                        {
+                            nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                        }
                         else {
                             nextDirection = RayDirection.HORIZONTAL_LEFT;
                         }
@@ -69,13 +74,22 @@ public class Ray {
                         if (newXindex == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
                         }
+                        else if (checkAtomAtPosition(hitAtomCoordinates.getX(), hitAtomCoordinates.getY() + 1))
+                        {
+                            nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
+                        }
                         else {
                             nextDirection = RayDirection.HORIZONTAL_LEFT;
                         }
                         break;
                     case DIAGONAL_UP_RIGHT:
                         if (newXindex == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY()) {
+                            System.out.println("bb");
                             nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                        }
+                        else if (checkAtomAtPosition(hitAtomCoordinates.getX(), hitAtomCoordinates.getY() + 1))
+                        {
+                            nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                         }
                         else {
                             nextDirection = RayDirection.HORIZONTAL_RIGHT;
@@ -101,6 +115,11 @@ public class Ray {
                     case HORIZONTAL_LEFT:
                         if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                        }
+                        else if (checkAtomAtPosition((hitAtomCoordinates.getX() + 1), hitAtomCoordinates.getY()))
+                        {
+                            System.out.println("works");
+                            nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                         }
                         else {
                             nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
@@ -204,23 +223,23 @@ public class Ray {
                         return 2;                    }
                     break;
                 case DIAGONAL_UP_RIGHT:
-                    if ((xIndex > 4 && xIndex - 1 == atomXIndex && yIndex + 1 == atomYIndex) ||
-                            (xIndex <= 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex)) {
+                    if (((xIndex > 4 && xIndex - 1 == atomXIndex && yIndex + 1 == atomYIndex) ||
+                            (xIndex <= 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex)) && !(checkAtomAtPosition(atomXIndex, atomYIndex + 1))) {
                         return 2;                    }
                     break;
                 case DIAGONAL_DOWN_RIGHT:
                     if ((xIndex < 4 && xIndex + 1 == atomXIndex && yIndex + 1 == atomYIndex) ||
-                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex)) {
+                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex))  {
                         return 2;                    }
                     break;
                 case DIAGONAL_UP_LEFT:
-                    if ((xIndex > 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex) ||
-                            (xIndex <= 4 && xIndex - 1 == atomXIndex && yIndex - 1 == atomYIndex)) {
+                    if (((xIndex > 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex) ||
+                            (xIndex <= 4 && xIndex - 1 == atomXIndex && yIndex - 1 == atomYIndex)) && !(checkAtomAtPosition(atomXIndex, atomYIndex + 1))) {
                         return 2;                    }
                     break;
                 case DIAGONAL_DOWN_LEFT:
-                    if ((xIndex < 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex) ||
-                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex - 1 == atomYIndex)) {
+                    if (((xIndex < 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex) ||
+                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex - 1 == atomYIndex)) && !(checkAtomAtPosition(atomXIndex, atomYIndex + 1))) {
                         return 2;
                     }
                     break;
@@ -229,14 +248,6 @@ public class Ray {
 
         return 0;
     }
-
-    // may use this later
-//    private void extendRayPath(int xIndex, int yIndex, RayDirection direction) {
-//        // Add a point slightly beyond the point of impact to the ray's path
-//        double extensionX = HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX() + (3 * 20);
-//        double extensionY = HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY() + (3 * 0.1);
-//        rayPath.add(new Point2D(extensionX, extensionY));
-//    }
 
     void displayRay(Pane pane) {
         if (!terminated) {
@@ -298,7 +309,7 @@ public class Ray {
         return new Point2D(midX, midY);
     }
 
-    private boolean checkAtomAtPosition(int xIndex, int yIndex) {
+    private boolean checkAtomAtPosition(double xIndex, double yIndex) {
         for (int i = 0; i < getAtoms().size(); i += 2) {
             int atomXIndex = getAtoms().get(i);
             int atomYIndex = getAtoms().get(i + 1);
