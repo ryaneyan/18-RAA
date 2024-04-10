@@ -1,0 +1,28 @@
+.custom-button {
+    -fx-background-color: TRANSPARENT; /* do set this to tranparent when you ge the arrow sorted*/
+    -fx-background-image: url("arrow.png");
+    -fx-background-size: 100% 100%;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+}
+
+.diagonal-down-left {
+    -fx-rotate: 134;
+}
+
+.diagonal-down-right {
+    -fx-rotate: 45;
+}
+
+.diagonal-up-left {
+    -fx-rotate: -135;
+}
+
+.diagonal-up-right {
+    -fx-rotate: -45;
+}
+
+.horizontal-left {
+    -fx-rotate: 180;
+}
+

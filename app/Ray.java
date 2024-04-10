@@ -84,7 +84,6 @@ public class Ray {
                         break;
                     case DIAGONAL_UP_RIGHT:
                         if (newXindex == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY()) {
-                            System.out.println("bb");
                             nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                         }
                         else if (checkAtomAtPosition(hitAtomCoordinates.getX(), hitAtomCoordinates.getY() + 1))
@@ -100,12 +99,20 @@ public class Ray {
                         if (newXindex == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
                         }
+                        else if (checkAtomAtPosition(hitAtomCoordinates.getX(), hitAtomCoordinates.getY() + 1))
+                        {
+                            nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
+                        }
                         else {
                             nextDirection = RayDirection.HORIZONTAL_RIGHT;
                         }
                         break;
                     case HORIZONTAL_RIGHT:
-                        if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY()) {
+                        if (checkAtomAtPosition((hitAtomCoordinates.getX() - 1), hitAtomCoordinates.getY()))
+                    {
+                        nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                    }
+                        else if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
                         }
                         else {
@@ -113,13 +120,13 @@ public class Ray {
                         }
                         break;
                     case HORIZONTAL_LEFT:
-                        if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()) {
-                            nextDirection = RayDirection.DIAGONAL_UP_LEFT;
-                        }
-                        else if (checkAtomAtPosition((hitAtomCoordinates.getX() + 1), hitAtomCoordinates.getY()))
+                        if (checkAtomAtPosition((hitAtomCoordinates.getX() - 1), hitAtomCoordinates.getY()))
                         {
-                            System.out.println("works");
-                            nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
+                            System.out.println("hh");
+                        nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
+                        }
+                        else if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()) {
+                            nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                         }
                         else {
                             nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
@@ -215,21 +222,21 @@ public class Ray {
 
             switch (direction) {
                 case HORIZONTAL_RIGHT:
-                    if (yIndex + 1 == atomYIndex && xIndex == atomXIndex) {
+                    if ((yIndex + 1 == atomYIndex && xIndex == atomXIndex) && !(checkAtomAtPosition(atomXIndex + 1, atomYIndex))) {
                         return 2;                    }
                     break;
                 case HORIZONTAL_LEFT:
-                    if (yIndex - 1 == atomYIndex && xIndex == atomXIndex) {
+                    if ((yIndex - 1 == atomYIndex && xIndex == atomXIndex) && !(checkAtomAtPosition(atomXIndex - 1, atomYIndex))) {
                         return 2;                    }
                     break;
                 case DIAGONAL_UP_RIGHT:
                     if (((xIndex > 4 && xIndex - 1 == atomXIndex && yIndex + 1 == atomYIndex) ||
-                            (xIndex <= 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex)) && !(checkAtomAtPosition(atomXIndex, atomYIndex + 1))) {
+                            (xIndex <= 4 && xIndex - 1 == atomXIndex && yIndex == atomYIndex)) && !(checkAtomAtPosition(atomXIndex, atomYIndex - 1))) {
                         return 2;                    }
                     break;
                 case DIAGONAL_DOWN_RIGHT:
-                    if ((xIndex < 4 && xIndex + 1 == atomXIndex && yIndex + 1 == atomYIndex) ||
-                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex))  {
+                    if (((xIndex < 4 && xIndex + 1 == atomXIndex && yIndex + 1 == atomYIndex) ||
+                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex)) && !(checkAtomAtPosition(atomXIndex, atomYIndex - 1))) {
                         return 2;                    }
                     break;
                 case DIAGONAL_UP_LEFT:
@@ -239,7 +246,7 @@ public class Ray {
                     break;
                 case DIAGONAL_DOWN_LEFT:
                     if (((xIndex < 4 && xIndex + 1 == atomXIndex && yIndex == atomYIndex) ||
-                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex - 1 == atomYIndex)) && !(checkAtomAtPosition(atomXIndex, atomYIndex + 1))) {
+                            (xIndex >= 4 && xIndex + 1 == atomXIndex && yIndex - 1 == atomYIndex)) && !(checkAtomAtPosition(atomXIndex, atomYIndex + 1) || !(checkAtomAtPosition(atomXIndex, atomYIndex - 1)))) {
                         return 2;
                     }
                     break;

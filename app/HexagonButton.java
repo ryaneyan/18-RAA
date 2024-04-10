@@ -14,6 +14,8 @@ public class HexagonButton {
     {
         button.setOnAction(event -> {
             new Ray(startX, startY, direction).displayRay(root);
+            // disable button
+            button.setDisable(true);
         });
         root.getChildren().add(button);
     }
@@ -149,13 +151,37 @@ public class HexagonButton {
 
         Button button = new Button();
         double buttonRadius = (RADIUS / 4) - 2;
-        button.setShape(new Circle(buttonRadius));
+        button.getStyleClass().add("custom-button");
+        setDirectionStyle(button, direction);
         button.setLayoutX(centerX - buttonRadius);
         button.setLayoutY(centerY - buttonRadius);
         button.setMinSize(2 * buttonRadius, 2 * buttonRadius);
         button.setMaxSize(2 * buttonRadius, 2 * buttonRadius);
 
         setButtonActionAndAddToRoot(root, button, startX, startY, endX, endY, direction);
+    }
+
+    private static void setDirectionStyle(Button button, RayDirection direction) {
+        switch (direction) {
+            case DIAGONAL_DOWN_LEFT:
+                button.getStyleClass().add("diagonal-down-left");
+                break;
+            case DIAGONAL_DOWN_RIGHT:
+                button.getStyleClass().add("diagonal-down-right");
+                break;
+            case DIAGONAL_UP_LEFT:
+                button.getStyleClass().add("diagonal-up-left");
+                break;
+            case DIAGONAL_UP_RIGHT:
+                button.getStyleClass().add("diagonal-up-right");
+                break;
+            case HORIZONTAL_LEFT:
+                button.getStyleClass().add("horizontal-left");
+                break;
+
+            default:
+                break;
+        }
     }
 
     public static void createButtons(Pane root) {

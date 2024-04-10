@@ -25,6 +25,8 @@ public class Game extends Application {
 
         Pane welcomePane = WelcomePane.generateWelcomePane();
         Scene main = new Scene(welcomePane); // Adjust width and height as needed
+        main.getStylesheets().add(getClass().getResource("styles.css").toExternalForm()); // Load the CSS file
+
         stage.setScene(main);
         stage.setMaximized(true);
 
