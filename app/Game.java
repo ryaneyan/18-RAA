@@ -32,8 +32,7 @@ public class Game extends Application {
 
         Button startButton = new Button("Start");
         startButton.getStyleClass().add("Start");
-        startButton.setLayoutX(600);
-        startButton.setLayoutY(400);
+        startButton.setPrefSize(300,300);
 
         startButton.setOnAction(e -> {
             // generates the board and buttons at the same time
@@ -48,6 +47,9 @@ public class Game extends Application {
             main.setRoot(rootPane);
         });
         welcomePane.getChildren().add(startButton);
+
+        startButton.layoutXProperty().bind(welcomePane.widthProperty().subtract(startButton.widthProperty()).divide(2));
+        startButton.layoutYProperty().bind(welcomePane.heightProperty().subtract(startButton.heightProperty()).divide(2));
 
         stage.setScene(main);
         stage.setMaximized(true);

@@ -41,23 +41,23 @@ public class WelcomePane {
 
         welcomePane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-        Text welcomeText = new Text("Welcome to BlackBox+\n Press ");
+        Text welcomeText = new Text("Welcome to\nBlackBox+\n");
         welcomeText.setFill(Color.YELLOW);
         welcomeText.setFont(Font.font("Lucida Console", FontWeight.BOLD, 40));
-        welcomeText.setLayoutX(700);
-        welcomeText.setLayoutY(300);
+        welcomeText.setLayoutX(100);
+        welcomeText.setLayoutY(150);
         welcomePane.getChildren().add(welcomeText);
 
 
-        Text atomText = new Text("Atoms amount");
+        Text atomText = new Text("Atoms Amount:");
         atomText.setFill(Color.YELLOW);
-        atomText.setFont(Font.font("Lucida Console", FontWeight.BOLD, 40));
-        atomText.setLayoutX(700);
-        atomText.setLayoutY(450);
+        atomText.setFont(Font.font("Lucida Console", FontWeight.BOLD, 30));
+        atomText.setLayoutX(950);
+        atomText.setLayoutY(350);
         welcomePane.getChildren().add(atomText);
 
         Label atomLabel = new Label(String.valueOf((int) Constants.ATOMS_AMOUNT));
-        atomLabel.setFont(Font.font("Lucida Console", FontWeight.BOLD, 20));
+        atomLabel.setFont(Font.font("Lucida Console", FontWeight.BOLD, 10));
         atomLabel.setTextFill(Color.YELLOW);
 
         Button decrementButton = new Button();
@@ -73,9 +73,9 @@ public class WelcomePane {
         });
 
         HBox hbox = new HBox(decrementButton, atomLabel, incrementButton);
-        hbox.setSpacing(60); // spacing between elements
-        hbox.setLayoutX(700);
-        hbox.setLayoutY(500);
+        hbox.setSpacing(30); // spacing between elements
+        hbox.setLayoutX(950);
+        hbox.setLayoutY(350);
         incrementButton.getStyleClass().add("increment-button");
         decrementButton.getStyleClass().add("decrement-button");
 
