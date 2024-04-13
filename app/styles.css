@@ -1,6 +1,6 @@
 .custom-button {
     -fx-background-color: TRANSPARENT; /* do set this to tranparent when you ge the arrow sorted*/
-    -fx-background-image: url("arrow.png");
+    -fx-background-image: url("assets/arrow.png");
     -fx-background-size: 100% 100%;
     -fx-scale-x: 1;
     -fx-scale-y: 1;
@@ -25,4 +25,56 @@
 .horizontal-left {
     -fx-rotate: 180;
 }
+
+.root {
+    -fx-font-family: "Lucida Console";
+}
+
+.increment-button {
+    -fx-background-image: url("assets/arrow_increment.png");
+    -fx-display: inline-block;
+    -fx-transition-duration: 1s;
+    -fx-cursor: pointer;
+    -fx-background-size: 100% 100%;
+    -fx-border-color: transparent;
+}
+
+.decrement-button {
+    -fx-background-image: url("assets/arrow_decrement.png");
+    -fx-display: inline-block;
+    -fx-transition-duration: 1s;
+    -fx-cursor: pointer;
+    -fx-background-size: 100% 100%;
+    -fx-border-color: transparent;
+}
+
+.label {
+    -fx-font-weight: bold;
+    -fx-font-size: 40px;
+    -fx-text-fill: yellow;
+}
+
+.button.Start {
+    -fx-background-color: transparent;
+    -fx-background-image: url('assets/start.png');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-text-fill: transparent;
+
+    -fx-font-size: 24px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+
+
+
+
+
 

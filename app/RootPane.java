@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 
 import static app.Constants.ATOMS_AMOUNT;
-import static app.Constants.RADIUS;
 
 public class RootPane {
     private RootPane(){
@@ -44,7 +43,7 @@ public class RootPane {
         {
             int x = rand.nextInt(9);
             int y = rand.nextInt(HexBoard.getHexBoard().get(x).size());
-//            int[] atomsTest = {0, 1, 1, 2, 6, 3, 4, 5, 5, 3, 7, 2};
+//            int[] atomsTest = {2, 2, 4, 6, 0, 3, 6, 5, 5, 3, 8, 4};
 //            int x = atomsTest[j];
 //            int y = atomsTest[k];
 

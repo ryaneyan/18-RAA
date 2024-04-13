@@ -3,9 +3,12 @@ package app;
 import static app.Constants.*;
 import static app.WelcomePane.generateWelcomePane;
 
+import app.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,13 +28,15 @@ public class Game extends Application {
 
         Pane welcomePane = WelcomePane.generateWelcomePane();
         Scene main = new Scene(welcomePane); // Adjust width and height as needed
-        main.getStylesheets().add(getClass().getResource("styles.css").toExternalForm()); // Load the CSS file
+        main.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
-        stage.setScene(main);
-        stage.setMaximized(true);
+        Button startButton = new Button("Start");
+        startButton.getStyleClass().add("Start");
+        startButton.setLayoutX(600);
+        startButton.setLayoutY(400);
 
-        main.setOnMouseClicked(e -> {
-// generates the board and buttons at the same time
+        startButton.setOnAction(e -> {
+            // generates the board and buttons at the same time
             HexBoard.generateBoard();
             Pane rootPane = RootPane.generateRootPane();
             HexagonButton.createButtons(rootPane);
@@ -42,8 +47,10 @@ public class Game extends Application {
 
             main.setRoot(rootPane);
         });
+        welcomePane.getChildren().add(startButton);
 
-
+        stage.setScene(main);
+        stage.setMaximized(true);
         stage.setTitle("BlackBox+");
         stage.show();
     }
@@ -66,7 +73,6 @@ public class Game extends Application {
         toggleButton.setOnAction(event -> toggleVisibility(pane));
         return toggleButton;
     }
-
 
     public static void main(String[] args) {
         launch(args);
