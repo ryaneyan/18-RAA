@@ -34,23 +34,21 @@
     -fx-background-image: url("assets/arrow_increment.png");
     -fx-display: inline-block;
     -fx-transition-duration: 1s;
-    -fx-cursor: pointer;
     -fx-background-size: 100% 100%;
-    -fx-border-color: transparent;
+    -fx-border-color: black;
 }
 
 .decrement-button {
     -fx-background-image: url("assets/arrow_decrement.png");
     -fx-display: inline-block;
     -fx-transition-duration: 1s;
-    -fx-cursor: pointer;
     -fx-background-size: 100% 100%;
-    -fx-border-color: transparent;
+    -fx-border-color: black;
 }
 
 .label {
     -fx-font-weight: bold;
-    -fx-font-size: 40px;
+    -fx-font-size: 25px;
     -fx-text-fill: yellow;
 }
 
@@ -72,9 +70,10 @@
     height: 100%;
 }
 
-
-
-
-
-
-
+.check-atoms-button {
+    -fx-background-color: orange;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-min-width: 90px;
+    -fx-min-height: 50px;
+}

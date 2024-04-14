@@ -32,7 +32,7 @@ public class Game extends Application {
 
         Button startButton = new Button("Start");
         startButton.getStyleClass().add("Start");
-        startButton.setPrefSize(300,300);
+        startButton.setPrefSize(200,200);
 
         startButton.setOnAction(e -> {
             // generates the board and buttons at the same time
@@ -44,12 +44,17 @@ public class Game extends Application {
             Button toggleButton = createVisibilityButton(rootPane);
             rootPane.getChildren().add(toggleButton);
 
+            Button checkAtomsButton = createCheckAtomsButton(rootPane);
+            rootPane.getChildren().add(checkAtomsButton);
+            checkAtomsButton.setLayoutX(1150);
+            checkAtomsButton.setLayoutY(320);
+
             main.setRoot(rootPane);
         });
         welcomePane.getChildren().add(startButton);
 
         startButton.layoutXProperty().bind(welcomePane.widthProperty().subtract(startButton.widthProperty()).divide(2));
-        startButton.layoutYProperty().bind(welcomePane.heightProperty().subtract(startButton.heightProperty()).divide(2));
+        startButton.setLayoutY(600);
 
         stage.setScene(main);
         stage.setMaximized(true);
@@ -60,8 +65,7 @@ public class Game extends Application {
     public static void toggleVisibility(Pane pane)
     {
         for (javafx.scene.Node node : pane.getChildren()) {
-
-            if (node instanceof Hexagon || node instanceof Button || node instanceof Text)
+            if (node instanceof Hexagon || node instanceof Button || node instanceof Text )
             {
                 continue;
             }
@@ -74,6 +78,26 @@ public class Game extends Application {
         Button toggleButton = new Button("Visibility");
         toggleButton.setOnAction(event -> toggleVisibility(pane));
         return toggleButton;
+    }
+
+    public static Button createCheckAtomsButton(Pane pane)
+    {
+        Button checkAtomsButton = new Button("Submit");
+        checkAtomsButton.getStyleClass().add("check-atoms-button");
+        checkAtomsButton.setOnAction(event -> {
+            Hexagon.checkForAtomAndChangeColor();
+            makeGameUnplayable(pane);
+        });
+
+        return checkAtomsButton;
+    }
+
+    public static void makeGameUnplayable(Pane pane) {
+        for (javafx.scene.Node node : pane.getChildren()) {
+            if (node instanceof Hexagon || node instanceof Button) {
+                node.setDisable(true);
+            }
+        }
     }
 
     public static void main(String[] args) {
