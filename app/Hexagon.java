@@ -6,13 +6,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static app.Constants.*;
 
 public class Hexagon extends Polygon {
+
+    private static List<Point2D> clickedCoordinates = new ArrayList<>();
+    private static Map<Circle, Point2D> circleMap = new HashMap<>();
 
     public Hexagon(double centreX, double centreY, double radius) {
         super();
@@ -21,7 +22,7 @@ public class Hexagon extends Polygon {
         this.centreY = centreY;
 
         double angle = Math.PI;
-        final double angleDegreeChange = Math.PI * 2 / NUM_OF_SIDES + (240 * Math.PI/180);
+        final double angleDegreeChange = Math.PI * 2 / NUM_OF_SIDES + (240 * Math.PI / 180);
 
         for (int i = 0; i < NUM_OF_SIDES; i++, angle += angleDegreeChange) {
 
@@ -40,7 +41,29 @@ public class Hexagon extends Polygon {
             Hexagon.super.toBack();
             Hexagon.super.setStroke(Color.YELLOW);
         });
+        super.setOnMouseClicked(mouseEvent -> {
+                Point2D currentPoint = new Point2D(centreX, centreY);
+                Optional<Circle> existingCircle = circleMap.keySet().stream()
+                        .filter(circle -> circleMap.get(circle).equals(currentPoint))
+                        .findFirst();
+
+                if (existingCircle.isPresent()) {
+                    ((Pane) this.getParent()).getChildren().remove(existingCircle.get());
+                    circleMap.remove(existingCircle.get());
+                    clickedCoordinates.remove(currentPoint);
+                } else if (clickedCoordinates.size() < ATOMS_AMOUNT) {
+                    clickedCoordinates.add(currentPoint);
+
+                    Circle circle = new Circle(centreX, centreY, ATOM_SIZE, Color.RED);
+                    ((Pane) this.getParent()).getChildren().add(circle);
+                    this.getParent().requestLayout();
+
+                    circleMap.put(circle, currentPoint);
+                }
+        });
+
     }
+
     private Point2D[] pointsArray = new Point2D[6];
     final private double centreX;
     final private double centreY;
@@ -50,12 +73,15 @@ public class Hexagon extends Polygon {
     public double getCentreX() {
         return centreX;
     }
+
     public double getCentreY() {
         return centreY;
     }
+
     public Circle getAreaOfInfluence() {
         return areaOfInfluence;
     }
+
     public boolean isAtom() {
         return isAtom;
     }
@@ -69,6 +95,7 @@ public class Hexagon extends Polygon {
         pane.getChildren().add(new Circle(centreX, centreY, ATOM_SIZE, Color.RED));
         setAreaOfInfluence(pane);
     }
+
     private void setAreaOfInfluence(Pane pane) {
         areaOfInfluence = new Circle(centreX, centreY, X_DIFF);
         areaOfInfluence.setFill(Color.TRANSPARENT);
@@ -77,5 +104,19 @@ public class Hexagon extends Polygon {
 
         areaOfInfluence.getStrokeDashArray().addAll(5d, 10d);
         pane.getChildren().add(areaOfInfluence);
+    }
+
+    public static void checkForAtomAndChangeColor() {
+        for (Map.Entry<Circle, Point2D> entry : circleMap.entrySet()) {
+            Circle circle = entry.getKey();
+            Point2D clickedCoordinate = entry.getValue();
+            for (List<Hexagon> hexRow : HexBoard.getHexBoard()) {
+                for (Hexagon hex : hexRow) {
+                    if (hex.isAtom() && clickedCoordinate.equals(new Point2D(hex.getCentreX(), hex.getCentreY()))) {
+                        circle.setFill(Color.GREEN);
+                    }
+                }
+            }
+        }
     }
 }
