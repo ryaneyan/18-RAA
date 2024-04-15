@@ -21,8 +21,9 @@ enum RayDirection{
 }
 
 public class Ray {
-    private boolean terminated = false;
     List<Point2D> rayPath = new ArrayList<>();
+    int lastXIndex;
+    int lastYIndex;
 
     public Ray(int X, int Y, RayDirection direction)
     {
@@ -30,35 +31,47 @@ public class Ray {
             double centerX = HexBoard.getHexBoard().get(X).get(Y).getCentreX();
             double centerY = HexBoard.getHexBoard().get(X).get(Y).getCentreY();
 
-//            rayPath.add(new Point2D(centerX - X_DIFF/2, centerY));
         setFirstPosition(X, Y, direction);
-        rayPath.add(new Point2D(centerX, centerY));
-            extendRay(X, Y, direction);
+        lastXIndex = X;
+        lastYIndex = Y;
 
+        // checks whether ray originates on an atom, if yes then instantly terminates it
+        if (checkAtomAtPosition(X, Y)) {
+            System.out.println("Ray Absorbed");
+            return;
+        }
+        else if (checkInitialReflection(X, Y, direction)) {
+            System.out.println("Ray reflected");
+            return;
+        }
+//        rayPath.add(new Point2D(centerX, centerY));
+//        checkAOFHit(X, Y, direction);
+        extendRay(X, Y, direction);
     }
 
     private void extendRay(int xIndex, int yIndex, RayDirection direction) {
-        int newXindex = determineNewIndexes(xIndex, yIndex, direction)[0];
-        int newYindex = determineNewIndexes(xIndex, yIndex, direction)[1];
+
+
 
         try {
-            Hexagon hex = HexBoard.getHexBoard().get(newXindex).get(newYindex);
+            Hexagon hex = HexBoard.getHexagon(xIndex, yIndex);
         } catch (IndexOutOfBoundsException exception){
-            setFirstPosition(xIndex, yIndex, getOppositeDirection(direction));
+            setLastPosition(lastXIndex, lastYIndex, direction);
             return;
         }
 
+
         Point2D currentPos = new Point2D(HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY());
-        Point2D nextPos = new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY());
+//        Point2D nextPos = new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY());
 
-        rayPath.add(new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY()));
+
         RayDirection nextDirection = direction; // Initialize with current direction
-
-        if (checkAOFHit(newXindex, newYindex, direction) == 1) {
+        rayPath.add(currentPos);
+        if (checkAOFHit(xIndex, yIndex, direction) == 1) {
 
                 switch (direction) {
                     case DIAGONAL_DOWN_LEFT:
-                        if (newXindex == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY())
+                        if (xIndex == hitAtomCoordinates.getX() && yIndex - 1 == hitAtomCoordinates.getY())
                         {
                             nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                         }
@@ -71,7 +84,7 @@ public class Ray {
                         }
                         break;
                     case DIAGONAL_UP_LEFT:
-                        if (newXindex == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()) {
+                        if (xIndex == hitAtomCoordinates.getX() && yIndex - 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
                         }
                         else if (checkAtomAtPosition(hitAtomCoordinates.getX(), hitAtomCoordinates.getY() + 1))
@@ -83,7 +96,7 @@ public class Ray {
                         }
                         break;
                     case DIAGONAL_UP_RIGHT:
-                        if (newXindex == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY()) {
+                        if (xIndex == hitAtomCoordinates.getX() && yIndex + 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                         }
                         else if (checkAtomAtPosition(hitAtomCoordinates.getX(), hitAtomCoordinates.getY() + 1))
@@ -96,7 +109,7 @@ public class Ray {
                         break;
                     case DIAGONAL_DOWN_RIGHT:
 
-                        if (newXindex == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY()) {
+                        if (xIndex == hitAtomCoordinates.getX() && yIndex + 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
                         }
                         else if (checkAtomAtPosition(hitAtomCoordinates.getX(), hitAtomCoordinates.getY() + 1))
@@ -112,7 +125,7 @@ public class Ray {
                     {
                         nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                     }
-                        else if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex + 1 == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY()) {
+                        else if (xIndex + 1 == hitAtomCoordinates.getX() && yIndex + 1 == hitAtomCoordinates.getY() || xIndex + 1 == hitAtomCoordinates.getX() && yIndex == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
                         }
                         else {
@@ -122,10 +135,9 @@ public class Ray {
                     case HORIZONTAL_LEFT:
                         if (checkAtomAtPosition((hitAtomCoordinates.getX() - 1), hitAtomCoordinates.getY()))
                         {
-                            System.out.println("hh");
                         nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                         }
-                        else if (newXindex + 1 == hitAtomCoordinates.getX() && newYindex == hitAtomCoordinates.getY() || newXindex + 1 == hitAtomCoordinates.getX() && newYindex - 1 == hitAtomCoordinates.getY()) {
+                        else if (xIndex + 1 == hitAtomCoordinates.getX() && yIndex == hitAtomCoordinates.getY() || xIndex + 1 == hitAtomCoordinates.getX() && yIndex - 1 == hitAtomCoordinates.getY()) {
                             nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                         }
                         else {
@@ -136,13 +148,18 @@ public class Ray {
                         return;
             }
         }
-        else if (checkAOFHit(newXindex, newYindex, direction) == 2) {
+        else if (checkAOFHit(xIndex, yIndex, direction) == 2) {
             // If it's a direct hit, no further action is needed here. Log or handle as appropriate.
             System.out.println("Direct hit! Ray stops.");
             return;
         }
 
-        rayPath.add(nextPos);
+        int newXindex = determineNewIndexes(xIndex, yIndex, nextDirection)[0];
+        int newYindex = determineNewIndexes(xIndex, yIndex, nextDirection)[1];
+
+        lastXIndex = xIndex;
+        lastYIndex = yIndex;
+
         extendRay(newXindex, newYindex, nextDirection);
     }
 
@@ -195,12 +212,16 @@ public class Ray {
     private Point2D hitAtomCoordinates; // Store the coordinates of the hit atom
 
     private int checkAOFHit(int xIndex, int yIndex, RayDirection direction) {
+        Hexagon current = HexBoard.getHexagon(xIndex, yIndex);
+        Point2D point = new Point2D (current.getCentreX(), current.getCentreY());
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
             if ((HexBoard.getHexBoard().get(getAtoms().get(2*i)).get(getAtoms().get(2*i+1)).getAreaOfInfluence() == null)) {
             }
-            else if (new Line(rayPath.get(rayPath.size()-1).getX(), rayPath.get(rayPath.size()-1).getY(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY()).intersects((HexBoard.getHexBoard().get(getAtoms().get(2*i)).get(getAtoms().get(2*i+1))).getAreaOfInfluence().getBoundsInLocal())) {
+            else if (HexBoard.getHexBoard().get(getAtoms().get(2 * i)).get(getAtoms().get(2 * i + 1)).getAreaOfInfluence().contains(point)) {
                 int directHitCheck = checkDirectHit(xIndex, yIndex, direction);
                 System.out.println("hits atom at: " + getAtoms().get(2*i) + "," + getAtoms().get(2*i+1));
+//                System.out.println(rayPath.size());
+//                System.out.println(rayPath);
 
                 hitAtomCoordinates = new Point2D(getAtoms().get(2*i), getAtoms().get(2*i+1));
 
@@ -209,7 +230,6 @@ public class Ray {
                 } else {
                     return 1;
                 }
-
             }
         }
         return 0;
@@ -252,52 +272,42 @@ public class Ray {
                     break;
             }
         }
-
         return 0;
     }
 
     void displayRay(Pane pane) {
-        if (!terminated) {
             for (int i = 0; i < rayPath.size() - 1; i++) {
-                Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i + 1).getX(), rayPath.get(i + 1).getY());
+                //this for testing
+//                 Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i).getX(), rayPath.get(i).getY());
+
+                //actual ray drawer
+                Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i+1).getX(), rayPath.get(i+1).getY());
+
                 toAdd.setStroke(Color.DEEPSKYBLUE);
                 toAdd.setStrokeWidth(5);
                 pane.getChildren().add(toAdd);
-
             }
-        }
     }
     private void setFirstPosition(int X, int Y, RayDirection direction) {
+        rayPath.add(getFirstPosition(X, Y, direction));
+    }
+
+    private Point2D getFirstPosition(int X, int Y, RayDirection direction) {
         Hexagon current = HexBoard.getHexagon(X, Y);
         Point2D[] points = current.getPointsArray();
-        switch (direction) {
-            case HORIZONTAL_RIGHT: rayPath.add(getMidpoint(points[4], points[5]));
-                break;
 
-            case HORIZONTAL_LEFT: rayPath.add(getMidpoint(points[1], points[2]));
-                break;
+        return switch (direction) {
+            case HORIZONTAL_RIGHT -> getMidpoint(points[4], points[5]);
+            case HORIZONTAL_LEFT -> getMidpoint(points[1], points[2]);
+            case DIAGONAL_DOWN_LEFT -> getMidpoint(points[0], points[1]);
+            case DIAGONAL_DOWN_RIGHT -> getMidpoint(points[5], points[0]);
+            case DIAGONAL_UP_LEFT -> getMidpoint(points[2], points[3]);
+            case DIAGONAL_UP_RIGHT -> getMidpoint(points[3], points[4]);
+        };
+    }
 
-            case DIAGONAL_DOWN_LEFT: rayPath.add(getMidpoint(points[0], points[1]));
-                break;
-
-            case DIAGONAL_DOWN_RIGHT: rayPath.add(getMidpoint(points[5], points[0]));
-                break;
-
-            case DIAGONAL_UP_LEFT: rayPath.add(getMidpoint(points[2], points[3]));
-                break;
-
-            case DIAGONAL_UP_RIGHT: rayPath.add(getMidpoint(points[3], points[4]));
-                break;
-
-            default:
-                throw new IllegalArgumentException("no such ray direction");
-        }
-
-        if (checkAtomAtPosition(X, Y)) {
-            System.out.println("Ray terminated. Atom found at the start position.");
-            terminated = true;
-            return;
-        }
+    private void setLastPosition(int X, int Y, RayDirection direction) {
+        setFirstPosition(X, Y, getOppositeDirection(direction));
     }
     private RayDirection getOppositeDirection(RayDirection direction) {
         return switch (direction) {
@@ -325,6 +335,26 @@ public class Ray {
             }
         }
         return false; // No atom found at the start position
+    }
+    private boolean checkInitialReflection(int X, int Y, RayDirection direction) {
+        Point2D point = getFirstPosition(X, Y, direction);
+        for (int i = 0; i < ATOMS_AMOUNT; i++) {
+            if (HexBoard.getHexBoard().get(getAtoms().get(2 * i)).get(getAtoms().get(2 * i + 1)).getAreaOfInfluence().contains(point)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkBounceOnFirstAtom(int X, int Y) {
+        Hexagon current = HexBoard.getHexagon(X, Y);
+        Point2D point = new Point2D (current.getCentreX(), current.getCentreY());
+        for (int i = 0; i < ATOMS_AMOUNT; i++) {
+            if (HexBoard.getHexBoard().get(getAtoms().get(2 * i)).get(getAtoms().get(2 * i + 1)).getAreaOfInfluence().contains(point)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
