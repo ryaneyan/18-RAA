@@ -1,7 +1,10 @@
 package app;
 
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 
 import java.util.List;
@@ -9,16 +12,27 @@ import java.util.List;
 import static app.Constants.*;
 
 public class HexagonButton {
+    public static Pane root;
 
-    private static void setButtonActionAndAddToRoot(Pane root, Button button, int startX, int startY, int endX, int endY, RayDirection direction)
-    {
+    private static void setButtonActionAndAddToRoot(Pane root, Button button, int startX, int startY, int endX, int endY, RayDirection direction) {
         button.setOnAction(event -> {
-            new Ray(startX, startY, direction).displayRay(root);
+            Ray ray = new Ray(startX, startY, direction);
+            ray.displayRay(root);
             // disable button
             button.setDisable(true);
+
+            int hitResult = ray.getFinalHitState();
+            button.getStyleClass().removeAll("button-hit", "button-direct-hit", "button-other");
+
+            if (hitResult == 1) {
+                button.getStyleClass().add("button-hit");
+            } else if (hitResult == 2) {
+                button.getStyleClass().add("button-direct-hit");
+            }
         });
         root.getChildren().add(button);
     }
+
 
     public static void drawButton(Pane root, int startX, int startY, int endX, int endY, int Flag) {
         double centerX = HexBoard.getHexBoard().get(startX).get(startY).getCentreX();
@@ -26,21 +40,20 @@ public class HexagonButton {
 
         RayDirection direction = null;
 
-        if (Flag == 1)
-        {
-            if ( (startY < 5 && startX == 0)) {
+        if (Flag == 1) {
+            if ((startY < 5 && startX == 0)) {
                 centerX += HEX_OFFSET_X;
                 centerY -= HEX_OFFSET_Y + 20;
 
                 direction = RayDirection.DIAGONAL_DOWN_LEFT;
             }
-            if ( (startX == 1||startX == 2||startX == 3||startX == 4) && startY == 0) {
+            if ((startX == 1 || startX == 2 || startX == 3 || startX == 4) && startY == 0) {
                 centerX -= HEX_RADIUS;
-                centerY += HEX_OFFSET_Y -10;
+                centerY += HEX_OFFSET_Y - 10;
 
                 direction = RayDirection.HORIZONTAL_RIGHT;
             }
-            if ( (startY == 0 && startX > 4) && !(startY == 0 && startX == 8)) {
+            if ((startY == 0 && startX > 4) && !(startY == 0 && startX == 8)) {
                 centerX -= RADIUS + 10;
                 centerY += HEX_OFFSET_Y;
 
@@ -66,55 +79,44 @@ public class HexagonButton {
                     direction = RayDirection.HORIZONTAL_LEFT;
                 }
             }
-        }
-        else if (Flag == 2)
-        {
-            if (startX == 0 && startY == 0)
-            {
+        } else if (Flag == 2) {
+            if (startX == 0 && startY == 0) {
                 centerX -= HEX_RADIUS;
-                centerY += HEX_OFFSET_Y -10;
+                centerY += HEX_OFFSET_Y - 10;
 
                 direction = RayDirection.HORIZONTAL_RIGHT;
             }
-            if (startX == 0 && startY == 4)
-            {
+            if (startX == 0 && startY == 4) {
                 centerX += HEX_RADIUS;
                 centerY += HEX_OFFSET_Y - 10;
 
                 direction = RayDirection.HORIZONTAL_LEFT;
             }
-            if (startX == 4 && startY == 0)
-            {
+            if (startX == 4 && startY == 0) {
                 centerX -= HEX_OFFSET_X;
                 centerY += HEX_RADIUS;
 
                 direction = RayDirection.DIAGONAL_UP_RIGHT;
             }
-            if (startX == 4 && startY == 8)
-            {
+            if (startX == 4 && startY == 8) {
                 centerX += HEX_OFFSET_X;
                 centerY += HEX_RADIUS;
 
                 direction = RayDirection.DIAGONAL_UP_LEFT;
             }
-            if (startX == 8 && startY == 0)
-            {
+            if (startX == 8 && startY == 0) {
                 centerX -= HEX_RADIUS;
                 centerY += HEX_OFFSET_Y;
 
                 direction = RayDirection.HORIZONTAL_RIGHT;
             }
-            if (startX == 8 && startY == 4)
-            {
+            if (startX == 8 && startY == 4) {
                 centerX += HEX_RADIUS;
                 centerY += HEX_OFFSET_Y;
 
                 direction = RayDirection.HORIZONTAL_LEFT;
             }
-        }
-
-
-        else {
+        } else {
             if (startY == 0 && startX < 5 || startX == 0) {
                 centerX -= HEX_OFFSET_X;
                 centerY -= HEX_OFFSET_Y + 20;
@@ -184,13 +186,16 @@ public class HexagonButton {
         }
     }
 
-    public static void createButtons(Pane root) {
+    public static void createButtons(Pane rootPane) {
+        root = rootPane;
         List<List<Hexagon>> hexBoard = HexBoard.getHexBoard();
 
         for (int l = 0; l < 2; ++l) {
             for (int x = 0; x < hexBoard.size(); x++) {
                 int Flag = 0;
-                if (l == 1) { Flag = 1;} // set flag for second buttons
+                if (l == 1) {
+                    Flag = 1;
+                } // set flag for second buttons
                 for (int y = 0; y < hexBoard.get(x).size(); y++) {
                     if (isOuterHexagon(x, y, hexBoard.size(), hexBoard.get(x).size())) {
                         int endX, endY;
@@ -220,7 +225,21 @@ public class HexagonButton {
 
 
     }
+
     private static boolean isOuterHexagon(int x, int y, int numRows, int numCols) {
         return x == 0 || y == 0 || x == numRows - 1 || y == numCols - 1;
+    }
+
+    public static Button getButtonAtPoint(Point2D point, Pane root) {
+        for (Node node : root.getChildren()) {
+            if (node instanceof Button) {
+                Button button = (Button) node;
+                if (button.getBoundsInParent().contains(point)) {
+                    // return button
+                    return button;
+                }
+            }
+        }
+        return null;
     }
 }

@@ -92,7 +92,9 @@ public class Hexagon extends Polygon {
 
     public void convertToAtom(Pane pane) {
         isAtom = true;
-        pane.getChildren().add(new Circle(centreX, centreY, ATOM_SIZE, Color.RED));
+        Circle atomCircle = new Circle(centreX, centreY, ATOM_SIZE, Color.YELLOW);
+        atomCircle.setVisible(false); // make the atom circle invisible
+        pane.getChildren().add(atomCircle);
         setAreaOfInfluence(pane);
     }
 
@@ -103,6 +105,7 @@ public class Hexagon extends Polygon {
         areaOfInfluence.setStrokeType(StrokeType.OUTSIDE); // Set the stroke type to outside
 
         areaOfInfluence.getStrokeDashArray().addAll(5d, 10d);
+        areaOfInfluence.setVisible(false);
         pane.getChildren().add(areaOfInfluence);
     }
 

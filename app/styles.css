@@ -6,6 +6,26 @@
     -fx-scale-y: 1;
 }
 
+.button:disabled {
+    -fx-opacity: 1; /* makes buttons fully opaque */
+}
+
+.button-hit {
+    -fx-background-image: url("assets/arrow_deflect.png");
+}
+
+.button-direct-hit {
+    -fx-background-image: url("assets/arrow_direct.png");
+}
+
+.button-other {
+    background-color: #0000ff; /* blue */
+}
+
+.horizontal-right {
+    -fx-rotate: 0;
+}
+
 .diagonal-down-left {
     -fx-rotate: 134;
 }

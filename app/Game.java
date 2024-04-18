@@ -5,6 +5,7 @@ import static app.WelcomePane.generateWelcomePane;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -12,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -40,7 +42,6 @@ public class Game extends Application {
             HexBoard.generateBoard();
             Pane rootPane = RootPane.generateRootPane();
             HexagonButton.createButtons(rootPane);
-            NumberedHexagonButton.createButtons(rootPane);
 
                 Button toggleButton = createVisibilityButton(rootPane);
                 rootPane.getChildren().add(toggleButton);
@@ -49,6 +50,20 @@ public class Game extends Application {
             rootPane.getChildren().add(checkAtomsButton);
             checkAtomsButton.setLayoutX(1150);
             checkAtomsButton.setLayoutY(320);
+
+            Button displayRayButton = displayRays(rootPane);
+            rootPane.getChildren().add(displayRayButton);
+            displayRayButton.setLayoutX(1150);
+            displayRayButton.setLayoutY(420);
+
+            ImageView coord = new ImageView();
+            Image cord_sys = new Image("file:app/assets/coord.PNG");
+            coord.setImage(cord_sys);
+            coord.setFitWidth(910);
+            coord.setFitHeight(640);
+            coord.setLayoutX(210);
+            coord.setLayoutY(70);
+//            rootPane.getChildren().add(coord);
 
             main.setRoot(rootPane);
         });
@@ -88,15 +103,37 @@ public class Game extends Application {
         checkAtomsButton.setOnAction(event -> {
             Hexagon.checkForAtomAndChangeColor();
             makeGameUnplayable(pane);
+            for (Node node : pane.getChildren()) {
+                if (node instanceof Circle && ((Circle) node).getRadius() == ATOM_SIZE || node instanceof Circle) {
+                    node.setVisible(true);
+                }
+            }
+        });
+        return checkAtomsButton;
+    }
+
+    public static Button displayRays(Pane pane)
+    {
+        Button checkRay = new Button("Show Rays");
+        checkRay.getStyleClass().add("check-atoms-button");
+        checkRay.setUserData("Show Rays");
+        checkRay.setOnAction(event -> {
+                for (Node node : pane.getChildren()) {
+                    if (node instanceof Line) {
+                        node.setVisible(true); // make the line visible
+                    }
+                }
         });
 
-        return checkAtomsButton;
+        return checkRay;
     }
 
     public static void makeGameUnplayable(Pane pane) {
         for (javafx.scene.Node node : pane.getChildren()) {
-            if (node instanceof Hexagon || node instanceof Button) {
+            if (node.getUserData() == null || !"Show Rays".equals(node.getUserData())) {
                 node.setDisable(true);
+            } else {
+                node.setDisable(false);
             }
         }
     }
