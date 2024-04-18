@@ -42,6 +42,7 @@ public class Ray {
             return;
         } else if (checkInitialReflection(X, Y, direction)) {
             System.out.println("Ray reflected");
+            finalHitState = 3;
             return;
         }
 //        rayPath.add(new Point2D(centerX, centerY));
@@ -396,13 +397,13 @@ public class Ray {
 //        rayPath.add(newPoint);
     if(!(finalHitState == 0)) {
         Button hitButton = HexagonButton.getButtonAtPoint(newPoint, HexagonButton.root);
-        if (hitButton != null) {
+//        if (hitButton != null) {
 //            System.out.println("Ray hits button: " + hitButton);
             hitButton.getStyleClass().removeAll("horizontal-left", "horizontal-right", "diagonal-down-left", "diagonal-down-right", "diagonal-up-left", "diagonal-up-right");
             hitButton.getStyleClass().add("button-hit");
             hitButton.getStyleClass().add(getStyleForDirection(direction));
             hitButton.setDisable(true);
-            }
+//            }
         }
     }
 }

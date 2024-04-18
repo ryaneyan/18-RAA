@@ -18,9 +18,11 @@
     -fx-background-image: url("assets/arrow_direct.png");
 }
 
-.button-other {
-    background-color: #0000ff; /* blue */
+.button-reflect-hit {
+    -fx-background-image: url("assets/arrow_reflect.png");
 }
+
+
 
 .horizontal-right {
     -fx-rotate: 0;
