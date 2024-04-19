@@ -1,8 +1,10 @@
 package app;
 
 import static app.Constants.*;
+import static app.HexagonButton.*;
 import static app.RootPane.getAtoms;
-
+import javafx.scene.control.Button;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -30,6 +32,10 @@ public class Ray {
 
     public Ray(int X, int Y, RayDirection direction)
     {
+
+            double centerX = HexBoard.getHexBoard().get(X).get(Y).getCentreX();
+            double centerY = HexBoard.getHexBoard().get(X).get(Y).getCentreY();
+
         setFirstPosition(X, Y, direction);
         lastXIndex = X;
         lastYIndex = Y;
@@ -38,9 +44,9 @@ public class Ray {
         if (checkAtomAtPosition(X, Y)) {
             System.out.println("Ray Absorbed");
             return;
-        }
-        else if (checkInitialReflection(X, Y, direction)) {
+        } else if (checkInitialReflection(X, Y, direction)) {
             System.out.println("Ray reflected");
+            finalHitState = 3;
             return;
         }
 //        rayPath.add(new Point2D(centerX, centerY));
@@ -49,15 +55,22 @@ public class Ray {
     }
 
     private void extendRay(int xIndex, int yIndex, RayDirection direction) {
+
+
+
         try {
             Hexagon hex = HexBoard.getHexagon(xIndex, yIndex);
-        } catch (IndexOutOfBoundsException exception){
+        } catch (IndexOutOfBoundsException exception) {
             setLastPosition(lastXIndex, lastYIndex, direction);
+
+            extendRayFurther(direction,  8, 54);
             return;
         }
 
 
         Point2D currentPos = new Point2D(HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreX(), HexBoard.getHexBoard().get(xIndex).get(yIndex).getCentreY());
+//        Point2D nextPos = new Point2D(HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreX(), HexBoard.getHexBoard().get(newXindex).get(newYindex).getCentreY());
+
 
         RayDirection nextDirection = direction; // Initialize with current direction
         rayPath.add(currentPos);
@@ -177,6 +190,10 @@ public class Ray {
         extendRay(newIndexes[0], newIndexes[1], nextDirection);
     }
 
+    public int getFinalHitState() {
+        return finalHitState;
+    }
+
     private int[] determineNewIndexes(int xIndex, int yIndex, RayDirection direction) {
         int newXindex = xIndex, newYindex = yIndex;
 
@@ -220,12 +237,12 @@ public class Ray {
                 newYindex = yIndex - 1;
             }
         }
-        return new int[] {newXindex, newYindex};
+        return new int[]{newXindex, newYindex};
     }
 
     private boolean checkAOFHit(int xIndex, int yIndex, RayDirection direction) {
         Hexagon current = HexBoard.getHexagon(xIndex, yIndex);
-        Point2D point = new Point2D (current.getCentreX(), current.getCentreY());
+        Point2D point = new Point2D(current.getCentreX(), current.getCentreY());
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
             if ((HexBoard.getHexBoard().get(getAtoms().get(2*i)).get(getAtoms().get(2*i+1)).getAreaOfInfluence() == null)) {
             }
@@ -282,17 +299,18 @@ public class Ray {
         return 0;
     }
     void displayRay(Pane pane) {
-            for (int i = 0; i < rayPath.size() - 1; i++) {
-                //this for testing
+        for (int i = 0; i < rayPath.size() - 1; i++) {
+            //this for testing
 //                 Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i).getX(), rayPath.get(i).getY());
 
-                //actual ray drawer
-                Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i+1).getX(), rayPath.get(i+1).getY());
+            //actual ray drawer
+            Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i + 1).getX(), rayPath.get(i + 1).getY());
 
-                toAdd.setStroke(Color.DEEPSKYBLUE);
-                toAdd.setStrokeWidth(5);
-                pane.getChildren().add(toAdd);
-            }
+            toAdd.setStroke(Color.DEEPSKYBLUE);
+            toAdd.setStrokeWidth(5);
+            toAdd.setVisible(false);
+            pane.getChildren().add(toAdd);
+        }
     }
     private void setFirstPosition(int X, int Y, RayDirection direction) {
         rayPath.add(getFirstPosition(X, Y, direction));
@@ -315,6 +333,7 @@ public class Ray {
     private void setLastPosition(int X, int Y, RayDirection direction) {
         setFirstPosition(X, Y, getOppositeDirection(direction));
     }
+
     private RayDirection getOppositeDirection(RayDirection direction) {
         return switch (direction) {
             case HORIZONTAL_RIGHT -> RayDirection.HORIZONTAL_LEFT;
@@ -323,6 +342,17 @@ public class Ray {
             case DIAGONAL_DOWN_RIGHT -> RayDirection.DIAGONAL_UP_LEFT;
             case DIAGONAL_UP_LEFT -> RayDirection.DIAGONAL_DOWN_RIGHT;
             case DIAGONAL_UP_RIGHT -> RayDirection.DIAGONAL_DOWN_LEFT;
+        };
+    }
+
+    private String getStyleForDirection(RayDirection direction) {
+        return switch (direction) {
+            case HORIZONTAL_RIGHT -> "horizontal-right";
+            case HORIZONTAL_LEFT -> "horizontal-left";
+            case DIAGONAL_DOWN_LEFT -> "diagonal-down-left";
+            case DIAGONAL_DOWN_RIGHT -> "diagonal-down-right";
+            case DIAGONAL_UP_LEFT -> "diagonal-up-left";
+            case DIAGONAL_UP_RIGHT -> "diagonal-up-right";
         };
     }
 
