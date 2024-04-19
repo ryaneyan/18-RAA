@@ -27,8 +27,8 @@ public class Ray {
     private List<Point2D> rayPath = new ArrayList<>();
     private int lastXIndex;
     private int lastYIndex;
-
     private int[] hitAtomCoordinates = new int[2];
+    private int finalHitState;
 
     public Ray(int X, int Y, RayDirection direction)
     {
@@ -63,7 +63,7 @@ public class Ray {
         } catch (IndexOutOfBoundsException exception) {
             setLastPosition(lastXIndex, lastYIndex, direction);
 
-            extendRayFurther(direction,  8, 54);
+//            extendRayFurther(direction,  8, 54);
             return;
         }
 
@@ -378,5 +378,48 @@ public class Ray {
             }
         }
         return false;
+    }
+
+    public void extendRayFurther(RayDirection direction, double extensionLength, int buttons) {
+        Point2D lastPoint = rayPath.get(rayPath.size() - 1);
+
+        double newX = lastPoint.getX();
+        double newY = lastPoint.getY();
+        switch (direction) {
+            case HORIZONTAL_RIGHT:
+                newX += extensionLength;
+                break;
+            case HORIZONTAL_LEFT:
+                newX -= extensionLength;
+                break;
+            case DIAGONAL_UP_LEFT:
+                newX -= extensionLength;
+                newY -= extensionLength;
+                break;
+            case DIAGONAL_UP_RIGHT:
+                newX += extensionLength ;
+                newY -= extensionLength;
+                break;
+            case DIAGONAL_DOWN_LEFT:
+                newX -= extensionLength;
+                newY += extensionLength;
+                break;
+            case DIAGONAL_DOWN_RIGHT:
+                newX += extensionLength;
+                newY += extensionLength;
+                break;
+        }
+        Point2D newPoint = new Point2D(newX, newY);
+//        rayPath.add(newPoint);
+//    if(!(finalHitState == 0)) {
+        Button hitButton = HexagonButton.getButtonAtPoint(newPoint, HexagonButton.root);
+        if (hitButton != null) {
+//            System.out.println("Ray hits button: " + hitButton);
+            hitButton.getStyleClass().removeAll("horizontal-left", "horizontal-right", "diagonal-down-left", "diagonal-down-right", "diagonal-up-left", "diagonal-up-right");
+            hitButton.getStyleClass().add("button-hit");
+            hitButton.getStyleClass().add(getStyleForDirection(direction));
+            hitButton.setDisable(true);
+//            }
+        }
     }
 }

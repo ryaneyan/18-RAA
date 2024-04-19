@@ -21,11 +21,10 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
+import java.util.*;
+
 import javafx.scene.shape.Circle;
-import java.util.Random;
 
 public class Game extends Application {
 
@@ -45,8 +44,6 @@ public class Game extends Application {
             HexBoard.generateBoard();
             Pane rootPane = RootPane.generateRootPane();
 
-            System.out.println(Hexagon.checkForAdjacentAtoms(0, 4));
-
             for (Node hex: rootPane.getChildren()){
                 if (hex instanceof Hexagon) {
                     Hexagon current = (Hexagon) hex;
@@ -55,7 +52,7 @@ public class Game extends Application {
 
             }
             HexagonButton.createButtons(rootPane);
-            NumberedHexagonButton.createButtons(rootPane);
+//            NumberedHexagonButton.createButtons(rootPane);
 
                 Button toggleButton = createVisibilityButton(rootPane);
                 rootPane.getChildren().add(toggleButton);
