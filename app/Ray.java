@@ -64,7 +64,7 @@ public class Ray {
         } catch (IndexOutOfBoundsException exception) {
             setLastPosition(lastXIndex, lastYIndex, direction);
 
-//            extendRayFurther(direction,  8, 54);
+            extendRayFurther(direction,  8, 54);
             return;
         }
 
@@ -85,6 +85,8 @@ public class Ray {
         if (checkAtomAtPosition(directHitCheckerCoords[0], directHitCheckerCoords[1]) && numAreasInCurrentAtom == 1) {
             // If it's a direct hit, no further action is needed here. Log or handle as appropriate.
             System.out.println("Direct hit! Ray stops.");
+            finalHitState = 2;
+
             return;
         } else if (checkAOFHit(xIndex, yIndex, direction)) {
             System.out.println("Hit:     " + hitAtomCoordinates[0] + " " + hitAtomCoordinates[1]);
