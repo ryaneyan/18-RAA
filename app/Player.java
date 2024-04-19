@@ -7,7 +7,10 @@ public class Player {
     public Player(String name) {
         this.name = name;
     }
-    private int score;
+
+    private static ArrayList<Player> players = new ArrayList<Player>();
+    private static int playerCount = 0;
+    private int score = 0;
     private String name;
 
     //list of actions done by player
@@ -15,5 +18,21 @@ public class Player {
 
     public List<String> getActions() {
         return actions;
+    }
+
+    public static void incrementPlayerCount() {
+        playerCount++;
+    }
+
+    public static int getPlayerCount() {
+        return playerCount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static ArrayList<Player> getPlayers() {
+        return players;
     }
 }

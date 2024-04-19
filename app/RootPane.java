@@ -6,6 +6,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,22 +19,15 @@ public class RootPane {
     private RootPane(){
     }
     private static List<Integer> atoms = new ArrayList<>();
+    private static Pane rootPane = new Pane();
 
-    public static Pane generateRootPane() {
-        Pane rootPane = new Pane();
+    public static void generateRootPane() {
         rootPane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
         for (List<Hexagon> list : HexBoard.getHexBoard()) {
             rootPane.getChildren().addAll(list);
         }
         generateRandomAtoms(rootPane);
-
-//        Ray.drawButton1(rootPane);
-//        Ray.drawButton2(rootPane);
-//        Ray.drawButton3(rootPane);
-
-        // the end x and y work from the start x and y so rather than wanting to go to a coordinate you should instead add or subract what x/y you are away from the original
-        return rootPane;
     }
 
     private static void generateRandomAtoms(Pane root) {
@@ -60,7 +54,6 @@ public class RootPane {
 
             current.convertToAtom(root);
 
-
             tally++;
             j+=2;
             k+=2;
@@ -68,6 +61,9 @@ public class RootPane {
         orderAtoms(atoms);
     }
 
+    public static Pane getRootPane() {
+        return rootPane;
+    }
     public static List<Integer> getAtoms() {
         return atoms;
     }
@@ -101,5 +97,13 @@ public class RootPane {
             atoms.add(atomArray[i][1]);
         }
 
+    }
+
+    public static void setPlayerName(String name) {
+        Text playerName = new Text(name);
+        playerName.setX(1150);
+        playerName.setY(320);
+        playerName.setStyle("-fx-text-fill: yellow; -fx-font-size: 20");
+        rootPane.getChildren().add(playerName);
     }
 }

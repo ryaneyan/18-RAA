@@ -5,10 +5,12 @@ import static app.WelcomePane.generateWelcomePane;
 
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,53 +42,59 @@ public class Game extends Application {
         startButton.getStyleClass().add("Start");
         startButton.setPrefSize(200,200);
 
-        startButton.setOnAction(e -> {
-            // generates the board and buttons at the same time
-            HexBoard.generateBoard();
-            Pane rootPane = RootPane.generateRootPane();
+        // generates the board and buttons at the same time
+        HexBoard.generateBoard();
+        RootPane.generateRootPane();
+        Pane rootPane = RootPane.getRootPane();
 
-            for (Node hex: rootPane.getChildren()){
-                if (hex instanceof Hexagon) {
-                    Hexagon current = (Hexagon) hex;
-                    current.setAreaOfInfluenceCount();
-                }
-
+        for (Node hex: rootPane.getChildren()){
+            if (hex instanceof Hexagon) {
+                Hexagon current = (Hexagon) hex;
+                current.setAreaOfInfluenceCount();
             }
-            HexagonButton.createButtons(rootPane);
-//            NumberedHexagonButton.createButtons(rootPane);
 
-            Button displayRayButton = displayRays(rootPane);
-            rootPane.getChildren().add(displayRayButton);
-            displayRayButton.setLayoutX(1150);
-            displayRayButton.setLayoutY(420);
-            displayRayButton.setDisable(true);
-            displayRayButton.getStyleClass().add("button-disable");
+        }
+        HexagonButton.createButtons(rootPane);
 
-            Button checkAtomsButton = createCheckAtomsButton(rootPane, displayRayButton);
-            rootPane.getChildren().add(checkAtomsButton);
-            checkAtomsButton.setLayoutX(1150);
-            checkAtomsButton.setLayoutY(320);
+        Button displayRayButton = displayRays(rootPane);
+        rootPane.getChildren().add(displayRayButton);
+        displayRayButton.setLayoutX(1150);
+        displayRayButton.setLayoutY(420);
+        displayRayButton.setDisable(true);
+        displayRayButton.getStyleClass().add("button-disable");
 
-            ImageView coord = new ImageView();
-            Image cord_sys = new Image("file:app/assets/coord.PNG");
-            coord.setImage(cord_sys);
-            coord.setFitWidth(910);
-            coord.setFitHeight(640);
-            coord.setLayoutX(210);
-            coord.setLayoutY(70);
+        Button checkAtomsButton = createCheckAtomsButton(rootPane, displayRayButton);
+        rootPane.getChildren().add(checkAtomsButton);
+        checkAtomsButton.setLayoutX(1150);
+        checkAtomsButton.setLayoutY(320);
+
+        ImageView coord = new ImageView();
+        Image cord_sys = new Image("file:app/assets/coord.PNG");
+        coord.setImage(cord_sys);
+        coord.setFitWidth(910);
+        coord.setFitHeight(640);
+        coord.setLayoutX(210);
+        coord.setLayoutY(70);
 //            rootPane.getChildren().add(coord);
 
-            ImageView key = new ImageView();
-            Image key_rays = new Image("file:app/assets/key_rays.PNG");
-            key.setImage(key_rays);
-            key.setFitWidth(150);
-            key.setFitHeight(150);
-            key.setLayoutX(5);
-            key.setLayoutY(630);
-            rootPane.getChildren().add(key);
+        ImageView key = new ImageView();
+        Image key_rays = new Image("file:app/assets/key_rays.PNG");
+        key.setImage(key_rays);
+        key.setFitWidth(150);
+        key.setFitHeight(150);
+        key.setLayoutX(5);
+        key.setLayoutY(630);
+        rootPane.getChildren().add(key);
 
 
-            main.setRoot(rootPane);
+
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                // more than one player functionality WIP
+//                AddPlayerPane.addPlayer(stage);
+                main.setRoot(rootPane);
+            }
         });
         welcomePane.getChildren().add(startButton);
 
