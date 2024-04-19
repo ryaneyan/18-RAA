@@ -4,6 +4,7 @@ import static app.Constants.*;
 import static app.WelcomePane.generateWelcomePane;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -14,15 +15,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
+
 import javafx.scene.shape.Circle;
-import java.util.Random;
 
 public class Game extends Application {
 
@@ -41,7 +43,16 @@ public class Game extends Application {
             // generates the board and buttons at the same time
             HexBoard.generateBoard();
             Pane rootPane = RootPane.generateRootPane();
+
+            for (Node hex: rootPane.getChildren()){
+                if (hex instanceof Hexagon) {
+                    Hexagon current = (Hexagon) hex;
+                    current.setAreaOfInfluenceCount();
+                }
+
+            }
             HexagonButton.createButtons(rootPane);
+//            NumberedHexagonButton.createButtons(rootPane);
 
             Button toggleButton = createVisibilityButton(rootPane);
                 rootPane.getChildren().add(toggleButton);

@@ -15,6 +15,8 @@ public class Hexagon extends Polygon {
     private static List<Point2D> clickedCoordinates = new ArrayList<>();
     private static Map<Circle, Point2D> circleMap = new HashMap<>();
 
+    private int containsAreaOfInfluences = 0;
+
     public Hexagon(double centreX, double centreY, double radius) {
         super();
 
@@ -68,6 +70,7 @@ public class Hexagon extends Polygon {
     final private double centreX;
     final private double centreY;
     private boolean isAtom = false;
+    private boolean bordersAtom = false;
     private Circle areaOfInfluence = null;
 
     public double getCentreX() {
@@ -121,5 +124,61 @@ public class Hexagon extends Polygon {
                 }
             }
         }
+    }
+
+    public void setAreaOfInfluenceCount() {
+        for (int i = 0; i < ATOMS_AMOUNT; i++) {
+            int atomX = RootPane.getAtoms().get(2*i);
+            int atomY = RootPane.getAtoms().get(2*i+1);
+
+
+            if (HexBoard.getHexagon(atomX, atomY).getAreaOfInfluence().contains(centreX, centreY)) containsAreaOfInfluences++;
+        }
+    }
+
+    public int getContainsAreaOfInfluences() {
+        return containsAreaOfInfluences;
+    }
+
+    public static boolean[] checkForAdjacentAtoms(int x, int y) {
+        boolean[] bordersAtoms = new boolean[6];
+        int[][] indexes = new int[6][2];
+        if (x < 4) {
+            // x, y-1
+            // x, y+1
+            // x-1, y-1
+            // x-1, y
+            // x+1, y
+            // x+1, y+1
+
+            indexes = new int[][]{{x - 1, y - 1}, {x - 1, y}, {x, y - 1}, {x, y + 1}, {x + 1, y}, {x + 1, y + 1}};
+        }
+        else if (x > 4) {
+            // x, y-1
+            // x, y+1
+            // x-1, y
+            // x-1, y+1
+            // x+1, y-1
+            // x+1, y
+
+            indexes = new int[][]{{x - 1, y}, {x - 1, y + 1}, {x, y - 1}, {x, y + 1}, {x + 1, y - 1}, {x + 1, y}};
+        } else {
+            // x, y-1
+            // x, y+1
+            // x-1, y-1
+            // x-1, y
+            // x+1, y-1
+            // x+1, y
+
+            indexes = new int[][]{{x - 1, y - 1}, {x - 1, y}, {x, y - 1}, {x, y + 1}, {x + 1, y - 1}, {x + 1, y}};
+        }
+        for (int i = 0; i < 6; i++) {
+            try {
+                bordersAtoms[i] = HexBoard.getHexagon(indexes[i][0], indexes[i][1]).isAtom;
+            } catch (IndexOutOfBoundsException exception) {
+                continue;
+            }
+        }
+        return bordersAtoms;
     }
 }
