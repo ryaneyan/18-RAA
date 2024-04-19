@@ -112,18 +112,27 @@ public class Hexagon extends Polygon {
         pane.getChildren().add(areaOfInfluence);
     }
 
-    public static void checkForAtomAndChangeColor() {
+    public static int checkForAtomAndChangeColor() {
+        int correctGuesses = 0;
         for (Map.Entry<Circle, Point2D> entry : circleMap.entrySet()) {
             Circle circle = entry.getKey();
             Point2D clickedCoordinate = entry.getValue();
+            boolean atomGuessedCorrectly = false;
             for (List<Hexagon> hexRow : HexBoard.getHexBoard()) {
                 for (Hexagon hex : hexRow) {
                     if (hex.isAtom() && clickedCoordinate.equals(new Point2D(hex.getCentreX(), hex.getCentreY()))) {
                         circle.setFill(Color.GREEN);
+                        atomGuessedCorrectly = true;
+                        break;
                     }
+                }
+                if (atomGuessedCorrectly) {
+                    correctGuesses++;
+                    break;
                 }
             }
         }
+        return correctGuesses;
     }
 
     public void setAreaOfInfluenceCount() {

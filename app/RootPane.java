@@ -47,7 +47,7 @@ public class RootPane {
             y = rand.nextInt(HexBoard.getHexBoard().get(x).size());
 
 
-//            int[] atomsTest = {0, 4, 2, 5, 3, 6, 6, 1, 4, 2, 0, 0};
+//            int[] atomsTest = {3, 1, 4, 3, 8, 4, 8, 0, 8, 1, 8, 2};
 //            x = atomsTest[j];
 //            y = atomsTest[k];
 

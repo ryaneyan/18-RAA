@@ -3,15 +3,26 @@ package app;
 import static app.Constants.*;
 import static app.HexagonButton.*;
 import static app.RootPane.getAtoms;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 enum RayDirection{
@@ -103,9 +114,12 @@ public class Ray {
                         else if (numAreasInCurrentAtom == 2) {
                             if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[3]) nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                             else if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[5]) nextDirection = RayDirection.HORIZONTAL_RIGHT;
-                            else nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
+                            else { nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
+                                finalHitState = 3;}
                         }
-                        else if (numAreasInCurrentAtom == 3) nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
+                        else if (numAreasInCurrentAtom == 3) { nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
+
+                        finalHitState = 3; }
                         break;
                     case DIAGONAL_UP_LEFT:
                         if (numAreasInCurrentAtom == 1) {
@@ -118,9 +132,11 @@ public class Ray {
                         else if (numAreasInCurrentAtom == 2) {
                             if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[3]) nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
                             else if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[4]) nextDirection = RayDirection.HORIZONTAL_RIGHT;
-                            else nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
+                            else { nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
+                            finalHitState = 3;}
                         }
-                        else if (numAreasInCurrentAtom == 3) nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
+                        else if (numAreasInCurrentAtom == 3) { nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
+                            finalHitState = 3;}
                         break;
                     case DIAGONAL_UP_RIGHT:
                         if (numAreasInCurrentAtom == 1) {
@@ -133,9 +149,11 @@ public class Ray {
                         else if (numAreasInCurrentAtom == 2) {
                             if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[3]) nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                             else if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[5]) nextDirection = RayDirection.HORIZONTAL_LEFT;
-                            else nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
+                            else { nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
+                                finalHitState = 3;}
                         }
-                        else if (numAreasInCurrentAtom == 3) nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
+                        else if (numAreasInCurrentAtom == 3) { nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
+                            finalHitState = 3;}
                         break;
                     case DIAGONAL_DOWN_RIGHT:
                         if (numAreasInCurrentAtom == 1) {
@@ -147,9 +165,11 @@ public class Ray {
                         else if (numAreasInCurrentAtom == 2) {
                             if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[4]) nextDirection = RayDirection.HORIZONTAL_LEFT;
                             else if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[3]) nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
-                            else nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                            else { nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                                finalHitState = 3;}
                         }
-                        else if (numAreasInCurrentAtom == 3) nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                        else if (numAreasInCurrentAtom == 3) { nextDirection = RayDirection.DIAGONAL_UP_LEFT;
+                            finalHitState = 3; }
                         break;
                     case HORIZONTAL_RIGHT:
                         if (numAreasInCurrentAtom == 1) {
@@ -161,9 +181,11 @@ public class Ray {
                         else if (numAreasInCurrentAtom == 2) {
                             if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[4]) nextDirection = RayDirection.DIAGONAL_UP_LEFT;
                             else if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[5]) nextDirection = RayDirection.DIAGONAL_DOWN_LEFT;
-                            else nextDirection = RayDirection.HORIZONTAL_LEFT;
+                            else { nextDirection = RayDirection.HORIZONTAL_LEFT;
+                                finalHitState = 3;}
                         }
-                        else if (numAreasInCurrentAtom == 3) nextDirection = RayDirection.HORIZONTAL_LEFT;
+                        else if (numAreasInCurrentAtom == 3) { nextDirection = RayDirection.HORIZONTAL_LEFT;
+                            finalHitState = 3;}
                         break;
                     case HORIZONTAL_LEFT:
                         if (numAreasInCurrentAtom == 1) {
@@ -175,9 +197,11 @@ public class Ray {
                         else if (numAreasInCurrentAtom == 2) {
                             if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[4]) nextDirection = RayDirection.DIAGONAL_DOWN_RIGHT;
                             else if (Hexagon.checkForAdjacentAtoms(hitAtomCoordinates[0], hitAtomCoordinates[1])[5]) nextDirection = RayDirection.DIAGONAL_UP_RIGHT;
-                            else nextDirection = RayDirection.HORIZONTAL_RIGHT;
+                            else { nextDirection = RayDirection.HORIZONTAL_RIGHT;
+                                finalHitState = 3;}
                         }
-                        else if (numAreasInCurrentAtom == 3) nextDirection = RayDirection.HORIZONTAL_RIGHT;
+                        else if (numAreasInCurrentAtom == 3) { nextDirection = RayDirection.HORIZONTAL_RIGHT;
+                            finalHitState = 3;}
                         break;
                     default:
                         return;
@@ -382,7 +406,6 @@ public class Ray {
         }
         return false;
     }
-
     public void extendRayFurther(RayDirection direction, double extensionLength, int buttons) {
         Point2D lastPoint = rayPath.get(rayPath.size() - 1);
 
@@ -414,15 +437,21 @@ public class Ray {
         }
         Point2D newPoint = new Point2D(newX, newY);
 //        rayPath.add(newPoint);
-//    if(!(finalHitState == 0)) {
+    if(!(finalHitState == 3)) {
         Button hitButton = HexagonButton.getButtonAtPoint(newPoint, HexagonButton.root);
         if (hitButton != null) {
 //            System.out.println("Ray hits button: " + hitButton);
             hitButton.getStyleClass().removeAll("horizontal-left", "horizontal-right", "diagonal-down-left", "diagonal-down-right", "diagonal-up-left", "diagonal-up-right");
             hitButton.getStyleClass().add("button-hit");
             hitButton.getStyleClass().add(getStyleForDirection(direction));
-            hitButton.setDisable(true);
-//            }
+            Label label = new Label(String.valueOf(HexagonButton.counter));
+            label.getStyleClass().add("ray-label");
+
+            label.setLayoutX(hitButton.getLayoutX());
+            label.setLayoutY(hitButton.getLayoutY());
+
+            HexagonButton.root.getChildren().add(label);
+        }
         }
     }
 }

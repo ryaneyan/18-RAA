@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -54,9 +55,6 @@ public class Game extends Application {
             HexagonButton.createButtons(rootPane);
 //            NumberedHexagonButton.createButtons(rootPane);
 
-            Button toggleButton = createVisibilityButton(rootPane);
-                rootPane.getChildren().add(toggleButton);
-
             Button displayRayButton = displayRays(rootPane);
             rootPane.getChildren().add(displayRayButton);
             displayRayButton.setLayoutX(1150);
@@ -96,35 +94,26 @@ public class Game extends Application {
         startButton.setLayoutY(600);
 
         stage.setScene(main);
-        stage.setMaximized(true);
+        stage.setFullScreen(true);
         stage.setTitle("BlackBox+");
         stage.show();
     }
 
-    public static void toggleVisibility(Pane pane)
-    {
-        for (javafx.scene.Node node : pane.getChildren()) {
-            if (node instanceof Hexagon || node instanceof Button || node instanceof Text )
-            {
-                continue;
-            }
-            node.setVisible(!node.isVisible());
-        }
-    }
-
-    public static Button createVisibilityButton(Pane pane)
-    {
-        Button toggleButton = new Button("Visibility");
-        toggleButton.setOnAction(event -> toggleVisibility(pane));
-        return toggleButton;
-    }
 
     public static Button createCheckAtomsButton(Pane pane, Button displayRay)
     {
         Button checkAtomsButton = new Button("Submit");
         checkAtomsButton.getStyleClass().add("check-atoms-button");
         checkAtomsButton.setOnAction(event -> {
-            Hexagon.checkForAtomAndChangeColor();
+
+            int incorrectGuesses =  ATOMS_AMOUNT - Hexagon.checkForAtomAndChangeColor();
+
+            System.out.println(incorrectGuesses);
+            int atom_score = HexagonButton.getScore();
+            atom_score += incorrectGuesses * 5;
+            HexagonButton.setScore(atom_score);
+            HexagonButton.updateScoreDisplay();
+
             makeGameUnplayable(pane);
             for (Node node : pane.getChildren()) {
                 if (node instanceof Circle && ((Circle) node).getRadius() == ATOM_SIZE || node instanceof Circle) {
@@ -144,7 +133,6 @@ public class Game extends Application {
             displayRay.setDisable(false);
             displayRay.getStyleClass().removeAll("button-disable");
 //            displayRay.setStyleClass().add()
-
         });
         return checkAtomsButton;
     }

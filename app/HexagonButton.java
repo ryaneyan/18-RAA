@@ -3,6 +3,7 @@ package app;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
@@ -13,7 +14,14 @@ import static app.Constants.*;
 
 public class HexagonButton {
     public static Pane root;
+    private static int score = 0;
+    private static Label scoreLabel = new Label();
+    static int counter = 1;
 
+
+    public static void updateScoreDisplay(){
+        scoreLabel.setText("Score " + getScore());
+    }
     private static void setButtonActionAndAddToRoot(Pane root, Button button, int startX, int startY, int endX, int endY, RayDirection direction) {
         button.setOnAction(event -> {
             Ray ray = new Ray(startX, startY, direction);
@@ -22,24 +30,53 @@ public class HexagonButton {
             button.setDisable(true);
 //            button.getStyleClass().removeAll("button-disable");
 
-
             int hitResult = ray.getFinalHitState();
             button.getStyleClass().removeAll("button-hit", "button-direct-hit", "button-other");
 
+            double buttonLayoutX = button.getLayoutX();
+            double buttonLayoutY = button.getLayoutY();
+
             if (hitResult == 2) {
                 button.getStyleClass().add("button-direct-hit");
+                score += 1;
             }
             else if (hitResult == 3) {
                 button.getStyleClass().add("button-reflect-hit");
+                score += 1;
             }
             else {
                 button.getStyleClass().add("button-hit");
+                score += 2;
+
+                Label label1 = new Label(String.valueOf(HexagonButton.counter));
+                label1.getStyleClass().add("ray-label");
+
+                label1.setLayoutX(buttonLayoutX);
+                label1.setLayoutY(buttonLayoutY);
+                root.getChildren().add(label1);
+                counter++;
             }
+
+            scoreLabel.getStyleClass().add("vbox-text");
+            VBox vbox = new VBox(scoreLabel);
+            vbox.getStyleClass().add("container");
+            vbox.setLayoutX(1165);
+            vbox.setLayoutY(200);
+            root.getChildren().add(vbox);
+            updateScoreDisplay();
+
         });
 
         root.getChildren().add(button);
     }
 
+    public static int getScore() {
+        return score;
+    }
+
+    public static void setScore(int atom_score) {
+        score = atom_score;
+    }
 
     public static void drawButton(Pane root, int startX, int startY, int endX, int endY, int Flag) {
         double centerX = HexBoard.getHexBoard().get(startX).get(startY).getCentreX();
@@ -249,4 +286,5 @@ public class HexagonButton {
         }
         return null;
     }
+
 }
