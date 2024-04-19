@@ -20,16 +20,23 @@ public class HexagonButton {
             ray.displayRay(root);
             // disable button
             button.setDisable(true);
+//            button.getStyleClass().removeAll("button-disable");
+
 
             int hitResult = ray.getFinalHitState();
             button.getStyleClass().removeAll("button-hit", "button-direct-hit", "button-other");
 
-            if (hitResult == 1) {
-                button.getStyleClass().add("button-hit");
-            } else if (hitResult == 2) {
+            if (hitResult == 2) {
                 button.getStyleClass().add("button-direct-hit");
             }
+            else if (hitResult == 3) {
+                button.getStyleClass().add("button-reflect-hit");
+            }
+            else {
+                button.getStyleClass().add("button-hit");
+            }
         });
+
         root.getChildren().add(button);
     }
 

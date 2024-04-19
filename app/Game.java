@@ -43,18 +43,20 @@ public class Game extends Application {
             Pane rootPane = RootPane.generateRootPane();
             HexagonButton.createButtons(rootPane);
 
-                Button toggleButton = createVisibilityButton(rootPane);
+            Button toggleButton = createVisibilityButton(rootPane);
                 rootPane.getChildren().add(toggleButton);
-
-            Button checkAtomsButton = createCheckAtomsButton(rootPane);
-            rootPane.getChildren().add(checkAtomsButton);
-            checkAtomsButton.setLayoutX(1150);
-            checkAtomsButton.setLayoutY(320);
 
             Button displayRayButton = displayRays(rootPane);
             rootPane.getChildren().add(displayRayButton);
             displayRayButton.setLayoutX(1150);
             displayRayButton.setLayoutY(420);
+            displayRayButton.setDisable(true);
+            displayRayButton.getStyleClass().add("button-disable");
+
+            Button checkAtomsButton = createCheckAtomsButton(rootPane, displayRayButton);
+            rootPane.getChildren().add(checkAtomsButton);
+            checkAtomsButton.setLayoutX(1150);
+            checkAtomsButton.setLayoutY(320);
 
             ImageView coord = new ImageView();
             Image cord_sys = new Image("file:app/assets/coord.PNG");
@@ -64,6 +66,16 @@ public class Game extends Application {
             coord.setLayoutX(210);
             coord.setLayoutY(70);
 //            rootPane.getChildren().add(coord);
+
+            ImageView key = new ImageView();
+            Image key_rays = new Image("file:app/assets/key_rays.PNG");
+            key.setImage(key_rays);
+            key.setFitWidth(150);
+            key.setFitHeight(150);
+            key.setLayoutX(5);
+            key.setLayoutY(630);
+            rootPane.getChildren().add(key);
+
 
             main.setRoot(rootPane);
         });
@@ -96,7 +108,7 @@ public class Game extends Application {
         return toggleButton;
     }
 
-    public static Button createCheckAtomsButton(Pane pane)
+    public static Button createCheckAtomsButton(Pane pane, Button displayRay)
     {
         Button checkAtomsButton = new Button("Submit");
         checkAtomsButton.getStyleClass().add("check-atoms-button");
@@ -108,6 +120,20 @@ public class Game extends Application {
                     node.setVisible(true);
                 }
             }
+
+            ImageView key = new ImageView();
+            Image key_atom = new Image("file:app/assets/key_atoms.PNG");
+            key.setImage(key_atom);
+            key.setFitWidth(200);
+            key.setFitHeight(200);
+            key.setLayoutX(0);
+            key.setLayoutY(50);
+            pane.getChildren().add(key);
+
+            displayRay.setDisable(false);
+            displayRay.getStyleClass().removeAll("button-disable");
+//            displayRay.setStyleClass().add()
+
         });
         return checkAtomsButton;
     }
@@ -115,15 +141,17 @@ public class Game extends Application {
     public static Button displayRays(Pane pane)
     {
         Button checkRay = new Button("Show Rays");
+//        checkRay.getStyleClass().removeAll("button-disable");
         checkRay.getStyleClass().add("check-atoms-button");
         checkRay.setUserData("Show Rays");
         checkRay.setOnAction(event -> {
-                for (Node node : pane.getChildren()) {
-                    if (node instanceof Line) {
-                        node.setVisible(true); // make the line visible
-                    }
+            for (Node node : pane.getChildren()) {
+                if (node instanceof Line) {
+                    node.setVisible(!node.isVisible());
                 }
+            }
         });
+
 
         return checkRay;
     }

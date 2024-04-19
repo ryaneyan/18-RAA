@@ -39,6 +39,7 @@ public class Ray {
         // checks whether ray originates on an atom, if yes then instantly terminates it
         if (checkAtomAtPosition(X, Y)) {
             System.out.println("Ray Absorbed");
+            finalHitState = 2;
             return;
         } else if (checkInitialReflection(X, Y, direction)) {
             System.out.println("Ray reflected");
@@ -277,7 +278,7 @@ public class Ray {
             Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i + 1).getX(), rayPath.get(i + 1).getY());
 
             toAdd.setStroke(Color.DEEPSKYBLUE);
-            toAdd.setStrokeWidth(5);
+            toAdd.setStrokeWidth(3);
             toAdd.setVisible(false);
             pane.getChildren().add(toAdd);
         }
@@ -395,9 +396,9 @@ public class Ray {
         }
         Point2D newPoint = new Point2D(newX, newY);
 //        rayPath.add(newPoint);
-    if(!(finalHitState == 0)) {
+//    if(!(finalHitState == 0)) {
         Button hitButton = HexagonButton.getButtonAtPoint(newPoint, HexagonButton.root);
-//        if (hitButton != null) {
+        if (hitButton != null) {
 //            System.out.println("Ray hits button: " + hitButton);
             hitButton.getStyleClass().removeAll("horizontal-left", "horizontal-right", "diagonal-down-left", "diagonal-down-right", "diagonal-up-left", "diagonal-up-right");
             hitButton.getStyleClass().add("button-hit");
