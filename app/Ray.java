@@ -25,6 +25,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Enum which holds the possible values of the direction a Ray can travel
+ */
 enum RayDirection{
     HORIZONTAL_LEFT,
     HORIZONTAL_RIGHT,
@@ -41,6 +44,14 @@ public class Ray {
     private int[] hitAtomCoordinates = new int[2];
     private int finalHitState;
 
+    /**
+     * Constructor for Ray. Sets first Hexagon x and y indices, runs checks for initial collision
+     * with atom AOFs.
+     * Extends ray to edge of Hexagon from the given centre point
+     * @param X x-index of the start of the ray
+     * @param Y y-index of the start of the ray
+     * @param direction direction in which the ray os travelling
+     */
     public Ray(int X, int Y, RayDirection direction)
     {
 
@@ -64,16 +75,24 @@ public class Ray {
         extendRay(X, Y, direction);
     }
 
+    /**
+     * Core logic for extending ray. Makes use of numerous helper methods.
+     * One method call extends the Ray one a distance of one Hexagon.
+     * Recursively calls itself to extend the ray further, stopping at a absorbtion, or edge of the board
+     * defined as an illegal bounds to a List.
+     * Adds next point to raypath List of points
+     * @param xIndex current x-index of the ray
+     * @param yIndex current y-index of the ray
+     * @param direction current direction of the ray
+     */
     private void extendRay(int xIndex, int yIndex, RayDirection direction) {
-
-
 
         try {
             Hexagon hex = HexBoard.getHexagon(xIndex, yIndex);
         } catch (IndexOutOfBoundsException exception) {
             setLastPosition(lastXIndex, lastYIndex, direction);
 
-            extendRayFurther(direction,  8, 54);
+            extendRayFurther(direction,  8);
             return;
         }
 
@@ -92,7 +111,6 @@ public class Ray {
         if (checkAtomAtPosition(directHitCheckerCoords[0], directHitCheckerCoords[1]) && numAreasInCurrentAtom == 1) {
             // If it's a direct hit, no further action is needed here. Log or handle as appropriate.
             finalHitState = 2;
-
             return;
         } else if (checkAOFHit(xIndex, yIndex, direction)) {
                 switch (direction) {
@@ -214,6 +232,13 @@ public class Ray {
         return finalHitState;
     }
 
+    /**
+     * Logic for determining the next indices of the ray.
+     * @param xIndex current x-index of the ray
+     * @param yIndex current y-index of the ray
+     * @param direction current direction of the ray
+     * @return a pair of ints where [0] is the new x-index and [1] is the new y-index
+     */
     private int[] determineNewIndexes(int xIndex, int yIndex, RayDirection direction) {
         int newXindex = xIndex, newYindex = yIndex;
 
@@ -260,6 +285,16 @@ public class Ray {
         return new int[]{newXindex, newYindex};
     }
 
+    /**
+     * Checks whether a ray collides with an AOF.
+     * Makes use of Circle.contains() to find if the ray is contained within the circle of influence
+     * of the atom. If collides in an area where 2 or more AOFs are found, returns true for the numerically
+     * sorted first atom. i.e. 2,5 is before 4,3
+     * @param xIndex x-index of the atom to check
+     * @param yIndex y-index of the atom to check
+     * @param direction direction the ray is travelling
+     * @return boolean value corresponding to whether the ray collides with an atom
+     */
     private boolean checkAOFHit(int xIndex, int yIndex, RayDirection direction) {
         Hexagon current = HexBoard.getHexagon(xIndex, yIndex);
         Point2D point = new Point2D(current.getCentreX(), current.getCentreY());
@@ -278,6 +313,13 @@ public class Ray {
         return false;
     }
 
+    /**
+     * Helper method to check if a direct hit occurred
+     * @param xIndex x-index of the atom to check
+     * @param yIndex y-index of the atom to check
+     * @param direction direction the ray is travelling
+     * @return returns 2 if a direct hit (absorption) occurred, 0 otherwise
+     */
     private int checkDirectHit(int xIndex, int yIndex, RayDirection direction) {
         for (int i = 0; i < getAtoms().size(); i += 2) {
             int atomXIndex = getAtoms().get(i);
@@ -317,7 +359,12 @@ public class Ray {
         }
         return 0;
     }
-    void displayRay(Pane pane) {
+
+    /**
+     * Displays a ray by linking up the Points in Raypath with Lines
+     * @param pane
+     */
+    public void displayRay(Pane pane) {
         for (int i = 0; i < rayPath.size() - 1; i++) {
             //this for testing
 //                 Line toAdd = new Line(rayPath.get(i).getX(), rayPath.get(i).getY(), rayPath.get(i).getX(), rayPath.get(i).getY());
@@ -331,10 +378,26 @@ public class Ray {
             pane.getChildren().add(toAdd);
         }
     }
+
+    /**
+     * Extends Ray to edge of board at the origin
+     * @param X x-index of the atom
+     * @param Y y-index of the atom
+     * @param direction direction the ray is travelling
+     */
     private void setFirstPosition(int X, int Y, RayDirection direction) {
         rayPath.add(getFirstPosition(X, Y, direction));
     }
 
+    /**
+     * Gets the coordinates of the first point to be added
+     * Makes use of the pointsArray and direction to get the line on the necessary side of the Hexagon
+     * and helper method to get midpoint
+     * @param X x-index of the atom
+     * @param Y y-index of the atom
+     * @param direction direction the ray is travelling
+     * @return Point which is to be added as the true origin of the ray
+     */
     private Point2D getFirstPosition(int X, int Y, RayDirection direction) {
         Hexagon current = HexBoard.getHexagon(X, Y);
         Point2D[] points = current.getPointsArray();
@@ -349,10 +412,22 @@ public class Ray {
         };
     }
 
+    /**
+     * Extends ray to the side of the board at the end. Makes use of existing method and calls it with
+     * opposite direction
+     * @param X x-index of the last atom
+     * @param Y y-index of the last atom
+     * @param direction direction the ray is travelling
+     */
     private void setLastPosition(int X, int Y, RayDirection direction) {
         setFirstPosition(X, Y, getOppositeDirection(direction));
     }
 
+    /**
+     * Gets the opposite direction to the given one
+     * @param direction the direction of the ray
+     * @return the opposite direction to the given
+     */
     private RayDirection getOppositeDirection(RayDirection direction) {
         return switch (direction) {
             case HORIZONTAL_RIGHT -> RayDirection.HORIZONTAL_LEFT;
@@ -364,6 +439,11 @@ public class Ray {
         };
     }
 
+    /**
+     * Gets the style for the button depending on the direction its meant to be facing
+     * @param direction direction of the ray originating from the button
+     * @return the css string corresponding to the direction
+     */
     private String getStyleForDirection(RayDirection direction) {
         return switch (direction) {
             case HORIZONTAL_RIGHT -> "horizontal-right";
@@ -375,12 +455,24 @@ public class Ray {
         };
     }
 
+    /**
+     * Gets midpoint of line between 2 points
+     * @param start origin of line
+     * @param end end of line
+     * @return the point halfway between the 2 points
+     */
     private Point2D getMidpoint(Point2D start, Point2D end) {
         double midX = (start.getX() + end.getX()) / 2;
         double midY = (start.getY() + end.getY()) / 2;
         return new Point2D(midX, midY);
     }
 
+    /**
+     * Finds out whether a Hexagon is an atom or not
+     * @param xIndex Hexagon x-index to check
+     * @param yIndex Hexagon y-index to check
+     * @return isAtom boolean of the Hexagon
+     */
     private boolean checkAtomAtPosition(int xIndex, int yIndex) {
         try {
             HexBoard.getHexagon(xIndex, yIndex);
@@ -389,6 +481,14 @@ public class Ray {
         }
         return HexBoard.getHexagon(xIndex, yIndex).isAtom();
     }
+
+    /**
+     * Checks whether the Ray collides with an AOF on the first atom it hits
+     * @param X x-index of the atom
+     * @param Y y-index of the atom
+     * @param direction direction the ray is travelling
+     * @return true or false if the ray collides or not
+     */
     private boolean checkInitialReflection(int X, int Y, RayDirection direction) {
         Point2D point = getFirstPosition(X, Y, direction);
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
@@ -398,7 +498,14 @@ public class Ray {
         }
         return false;
     }
-    public void extendRayFurther(RayDirection direction, double extensionLength, int buttons) {
+
+    /**
+     * Extends the Ray beyond the board but doesn't add to the visible path
+     * Used to determine the end Hexagon/output button for deflected rays
+     * @param direction direction of the ray
+     * @param extensionLength length by which to extend
+     */
+    public void extendRayFurther(RayDirection direction, double extensionLength) {
         Point2D lastPoint = rayPath.get(rayPath.size() - 1);
 
         double newX = lastPoint.getX();

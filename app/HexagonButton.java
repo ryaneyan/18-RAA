@@ -16,10 +16,26 @@ public class HexagonButton {
     private static Label scoreLabel = new Label();
     static int counter = 1;
 
+    /**
+     * Updates score to current value
+     */
     public static void updateScoreDisplay() {
         scoreLabel.setText("Score " + getScore());
     }
 
+    /**
+     * Configures button depending on whether the ray fired was absorbed, deflected or reflected
+     * Arrow changes colour and/or direction depending on the outcome
+     * Adds configured button to Pane
+     *
+     * @param root Pane to which the button is added
+     * @param button Button to be configured
+     * @param startX start X-index of the ray
+     * @param startY start Y-index of the ray
+     * @param endX end X-index of the ray
+     * @param endY end Y-index of the ray
+     * @param direction Direction travelled by the ray
+     */
     private static void setButtonActionAndAddToRoot(Pane root, Button button, int startX, int startY, int endX, int endY, RayDirection direction) {
         button.setOnAction(event -> {
             Ray ray = new Ray(startX, startY, direction);
@@ -72,6 +88,17 @@ public class HexagonButton {
         score = atom_score;
     }
 
+    /**
+     * Method contains an algorithm to make buttons used to fire rays across the board
+     *
+     * @param root Pane to which the button is added
+     * @param startX start X-index of the ray
+     * @param startY start Y-index of the ray
+     * @param endX end X-index of the ray
+     * @param endY end Y-index of the ray
+     * @param Flag Algorithm uses this value to determine if the button is a corner button
+     *             or a button on a side of the board
+     */
     public static void drawButton(Pane root, int startX, int startY, int endX, int endY, int Flag) {
         double centerX = HexBoard.getHexBoard().get(startX).get(startY).getCentreX();
         double centerY = HexBoard.getHexBoard().get(startX).get(startY).getCentreY() - 10;
@@ -184,6 +211,12 @@ public class HexagonButton {
         setButtonActionAndAddToRoot(root, button, startX, startY, endX, endY, direction);
     }
 
+    /**
+     * Changes orientation of a button depending on which direction the ray is fired at
+     *
+     * @param button Button the style of which is changed
+     * @param direction Direction travelled by a ray that would be fired from this button
+     */
     private static void setDirectionStyle(Button button, RayDirection direction) {
         switch (direction) {
             case DIAGONAL_DOWN_LEFT:
@@ -207,6 +240,10 @@ public class HexagonButton {
         }
     }
 
+    /**
+     * Gets outer hexagons and calls button algorithm to make buttons at their outer edges
+     * @param rootPane Pane to which the button will be added
+     */
     public static void createButtons(Pane rootPane) {
         root = rootPane;
         List<List<Hexagon>> hexBoard = HexBoard.getHexBoard();
@@ -242,10 +279,24 @@ public class HexagonButton {
         drawButton(root, 8, 4, 0, 0, 2);
     }
 
+    /**
+     * Checks whether a Hexagon is outer or contained within other hexagons
+     * @param x x-index of Hexagon
+     * @param y y-index of Hexagon
+     * @param numRows number of rows in the board
+     * @param numCols number of Hexagons in the specified row
+     * @return true or false depending on if the Hexagon is outer or not
+     */
     private static boolean isOuterHexagon(int x, int y, int numRows, int numCols) {
         return x == 0 || y == 0 || x == numRows - 1 || y == numCols - 1;
     }
 
+    /**
+     * Gets a button at a specific point
+     * @param point Point to look for a button at
+     * @param root Pane on which to look on
+     * @return The button at point
+     */
     public static Button getButtonAtPoint(Point2D point, Pane root) {
         for (Node node : root.getChildren()) {
             if (node instanceof Button) {

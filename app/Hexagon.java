@@ -23,6 +23,8 @@ public class Hexagon extends Polygon {
      * Constructor to make a hexagon. Uses math formulae and constants to calculate points around a centre
      * and makes a Polygon joining them hexagonally. Coordinate (0,0) is defined as the top left
      * most pixel in the window.
+     * In pointsArray, [0] and [1] are the x and y of the topmost vertex of the hexagon, and the subsequent
+     * array entries are the vertices clockwise
      *
      * @param centreX x-coordinate of the centre of the hexagon
      * @param centreY y-coordinate of the centre of the hexagon
@@ -139,8 +141,8 @@ public class Hexagon extends Polygon {
     }
 
     /**
-     * TODO RYAN
-     * @return
+     * Checks whether an atom was guessed correctly, and if yes turns it green, if not, red.
+     * @return the number of correctly guessed atoms
      */
     public static int checkForAtomAndChangeColor() {
         int correctGuesses = 0;

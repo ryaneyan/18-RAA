@@ -1,3 +1,6 @@
+// CLASS ONLY USED IN MULTIPLAYER VERSION
+
+
 package app;
 
 import java.util.ArrayList;

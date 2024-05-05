@@ -77,6 +77,13 @@ public class Game extends Application {
         stage.show();
     }
 
+    /**
+     * Creates and confugiures a button to Submit current ray placements and calculates score
+     * Activates button to reveal rays
+     * @param pane Pane to which the button is added to
+     * @param displayRay Button which makes rays visible
+     * @return Button to submit ray guesses
+     */
     public static Button createCheckAtomsButton(Pane pane, Button displayRay) {
         Button checkAtomsButton = new Button("Submit");
         checkAtomsButton.getStyleClass().add("check-atoms-button");
@@ -111,6 +118,11 @@ public class Game extends Application {
         return checkAtomsButton;
     }
 
+    /**
+     * Creates button which makes every ray fired to be visible
+     * @param pane Pane to which button is added
+     * @return Button which reveals rays
+     */
     public static Button displayRays(Pane pane) {
         Button checkRay = new Button("Show Rays");
         checkRay.getStyleClass().add("check-atoms-button");
@@ -126,6 +138,10 @@ public class Game extends Application {
         return checkRay;
     }
 
+    /**
+     * TODO
+     * @param pane
+     */
     public static void makeGameUnplayable(Pane pane) {
         for (Node node : pane.getChildren()) {
             if (node.getUserData() == null || !"Show Rays".equals(node.getUserData())) {

@@ -67,7 +67,7 @@ public class RootPane {
             j+=2;
             k+=2;
         }
-        orderAtoms(atoms);
+        orderAtoms();
     }
 
     public static Pane getRootPane() {
@@ -77,7 +77,11 @@ public class RootPane {
         return atoms;
     }
 
-    private static void orderAtoms(List<Integer> atoms) {
+    /**
+     * Orders atoms in the List from left-right top-bottom.
+     * Makes reflecting ray logic consistent
+     */
+    private static void orderAtoms() {
         int[][] atomArray = new int[ATOMS_AMOUNT][2];
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
             atomArray[i][0] = atoms.get(2*i);
@@ -107,6 +111,7 @@ public class RootPane {
         }
     }
 
+    // method used for multiplayer game
     public static void setPlayerName(String name) {
         Text playerName = new Text(name);
         playerName.setX(1150);

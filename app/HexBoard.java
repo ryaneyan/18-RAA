@@ -12,6 +12,12 @@ public class HexBoard {
 
     private static List<List<Hexagon>> hexBoard = new ArrayList<>();
 
+    /**
+     * Generates hexagons and adds them to a List.
+     * X_DIFF is the distance between 2 horizontally adjacent Hexagons
+     * Y_DIFF is the distance between 2 atoms directly above and below each other
+     * X_ORIGIN, Y_ORIGIN are the coords of the top-leftmost Hexagon's centre point
+     */
     public static void generateBoard() {
         int limit = 5;
         boolean increasing = true;
