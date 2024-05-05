@@ -1,48 +1,33 @@
 package app;
 
-import static app.Constants.*;
-import static app.WelcomePane.generateWelcomePane;
-
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.*;
-
-import javafx.scene.shape.Circle;
+import static app.Constants.*;
+import static app.WelcomePane.generateWelcomePane;
 
 public class Game extends Application {
 
     @Override
     public void start(Stage stage) {
-
-        Pane welcomePane = WelcomePane.generateWelcomePane();
-        Scene main = new Scene(welcomePane); // Adjust width and height as needed
+        Pane welcomePane = generateWelcomePane();
+        Scene main = new Scene(welcomePane);
         main.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
         Button startButton = new Button("Start");
         startButton.getStyleClass().add("Start");
         startButton.setPrefSize(200, 200);
 
-        // generates the board and buttons at the same time
         HexBoard.generateBoard();
         RootPane.generateRootPane();
         Pane rootPane = RootPane.getRootPane();
@@ -52,7 +37,6 @@ public class Game extends Application {
                 Hexagon current = (Hexagon) hex;
                 current.setAreaOfInfluenceCount();
             }
-
         }
         HexagonButton.createButtons(rootPane);
 
@@ -68,15 +52,6 @@ public class Game extends Application {
         checkAtomsButton.setLayoutX(1150);
         checkAtomsButton.setLayoutY(320);
 
-//        ImageView coord = new ImageView();
-//        Image cord_sys = new Image(Game.class.getResourceAsStream("/assets/coord.png"));
-//        coord.setImage(cord_sys);
-//        coord.setFitWidth(910);
-//        coord.setFitHeight(640);
-//        coord.setLayoutX(210);
-//        coord.setLayoutY(70);
-//            rootPane.getChildren().add(coord);
-
         ImageView key = new ImageView();
         Image key_rays = new Image(Game.class.getResourceAsStream("/assets/key_rays.png"));
         key.setImage(key_rays);
@@ -86,12 +61,9 @@ public class Game extends Application {
         key.setLayoutY(630);
         rootPane.getChildren().add(key);
 
-
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                // more than one player functionality WIP
-//                AddPlayerPane.addPlayer(stage);
                 main.setRoot(rootPane);
             }
         });
@@ -106,15 +78,13 @@ public class Game extends Application {
         stage.show();
     }
 
-
     public static Button createCheckAtomsButton(Pane pane, Button displayRay) {
         Button checkAtomsButton = new Button("Submit");
         checkAtomsButton.getStyleClass().add("check-atoms-button");
         checkAtomsButton.setOnAction(event -> {
-
             int incorrectGuesses = ATOMS_AMOUNT - Hexagon.checkForAtomAndChangeColor();
-
             System.out.println(incorrectGuesses);
+
             int atom_score = HexagonButton.getScore();
             atom_score += incorrectGuesses * 5;
             HexagonButton.setScore(atom_score);
@@ -138,14 +108,12 @@ public class Game extends Application {
 
             displayRay.setDisable(false);
             displayRay.getStyleClass().removeAll("button-disable");
-//            displayRay.setStyleClass().add()
         });
         return checkAtomsButton;
     }
 
     public static Button displayRays(Pane pane) {
         Button checkRay = new Button("Show Rays");
-//        checkRay.getStyleClass().removeAll("button-disable");
         checkRay.getStyleClass().add("check-atoms-button");
         checkRay.setUserData("Show Rays");
         checkRay.setOnAction(event -> {
@@ -156,12 +124,11 @@ public class Game extends Application {
             }
         });
 
-
         return checkRay;
     }
 
     public static void makeGameUnplayable(Pane pane) {
-        for (javafx.scene.Node node : pane.getChildren()) {
+        for (Node node : pane.getChildren()) {
             if (node.getUserData() == null || !"Show Rays".equals(node.getUserData())) {
                 node.setDisable(true);
             } else {
