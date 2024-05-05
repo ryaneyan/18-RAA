@@ -9,6 +9,7 @@ public class HexBoard {
 
     private HexBoard() {
     }
+
     private static List<List<Hexagon>> hexBoard = new ArrayList<>();
 
     public static void generateBoard() {
@@ -19,10 +20,9 @@ public class HexBoard {
             hexBoard.add(new ArrayList<>());
             for (int j = 0; j < limit; j++) {
                 Hexagon toAdd;
-                if(increasing) {
+                if (increasing) {
                     toAdd = new Hexagon(X_ORIGIN - (X_DIFF / 2 * i) + (X_DIFF * j), Y_ORIGIN + Y_DIFF * i, RADIUS);
-                }
-                else {
+                } else {
                     toAdd = new Hexagon(X_ORIGIN - (X_DIFF / 2 * (8 - i)) + (X_DIFF * j), Y_ORIGIN + Y_DIFF * i, RADIUS);
                 }
                 hexBoard.get(i).add(toAdd);
