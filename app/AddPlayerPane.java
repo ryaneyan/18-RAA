@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 public class AddPlayerPane {
     private AddPlayerPane(){}
 
-
     public static void addPlayer(Stage stage) {
         Label playerLabel = new Label("Enter name:");
         playerLabel.setFont(Font.font("Lucida Console", FontWeight.BOLD, 30));
@@ -23,7 +22,6 @@ public class AddPlayerPane {
         TextField playersInput = new TextField();
         playersInput.setStyle("-fx-background-color: grey; -fx-text-fill: yellow");
         playersInput.setFont(new Font(20));
-
 
         Button addPLayer = new Button("Confirm");
         addPLayer.setStyle("-fx-background-color: grey; -fx-text-fill: yellow;");
@@ -42,8 +40,8 @@ public class AddPlayerPane {
                 }
             }
         });
-
-        VBox vbox = new VBox(playerLabel, playersInput, addPLayer);
+        
+        VBox vbox = new VBox(playerLabel, playersInput, addPlayer);
         vbox.setSpacing(5);
 
         Popup popup = new Popup();
