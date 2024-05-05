@@ -139,8 +139,8 @@ public class Game extends Application {
     }
 
     /**
-     * TODO
-     * @param pane
+     * Disables all game buttons at the end of the game
+     * @param pane pane on which nodes are held
      */
     public static void makeGameUnplayable(Pane pane) {
         for (Node node : pane.getChildren()) {
