@@ -1,30 +1,22 @@
 package app;
 
-import javafx.css.Size;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import static app.Constants.ATOMS_AMOUNT;
 
 public class RootPane {
-    private RootPane(){
-    }
+    private RootPane(){}
     private static List<Integer> atoms = new ArrayList<>();
     private static Pane rootPane = new Pane();
 
-    /**
-     * Sets the background and adds each Hexagon to the root Pane for the game.
-     * Calls method to generate atoms.
-     */
     public static void generateRootPane() {
         rootPane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
@@ -34,26 +26,15 @@ public class RootPane {
         generateRandomAtoms();
     }
 
-    /**
-     * Method to convert ATOM_AMOUNT Hexagons to atoms and adds their AOFs to rootPane
-     * Can be modified to generate hardcoded atoms to be used for testing/debugging
-     */
     private static void generateRandomAtoms() {
         Random rand = new Random();
         int tally = 0;
         int x, y;
 
-    //used in testing
         int j = 0, k = 1;
-        while (tally < ATOMS_AMOUNT)
-        {
+        while (tally < ATOMS_AMOUNT){
             x = rand.nextInt(9);
             y = rand.nextInt(HexBoard.getHexBoard().get(x).size());
-
-    // hardcoded atom positions used for testing
-//            int[] atomsTest = {3, 1, 4, 3, 8, 4, 8, 0, 8, 1, 8, 2};
-//            x = atomsTest[j];
-//            y = atomsTest[k];
 
             Hexagon current = HexBoard.getHexBoard().get(x).get(y);
             if (current.isAtom()) {
