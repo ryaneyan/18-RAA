@@ -4,7 +4,9 @@ package app;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
 
 import java.util.*;
 
@@ -53,24 +55,24 @@ public class Hexagon extends Polygon {
             Hexagon.super.setStroke(Color.YELLOW);
         });
         super.setOnMouseClicked(mouseEvent -> {
-                Point2D currentPoint = new Point2D(centreX, centreY);
-                Optional<Circle> existingCircle = circleMap.keySet().stream()
-                        .filter(circle -> circleMap.get(circle).equals(currentPoint))
-                        .findFirst();
+            Point2D currentPoint = new Point2D(centreX, centreY);
+            Optional<Circle> existingCircle = circleMap.keySet().stream()
+                    .filter(circle -> circleMap.get(circle).equals(currentPoint))
+                    .findFirst();
 
-                if (existingCircle.isPresent()) {
-                    ((Pane) this.getParent()).getChildren().remove(existingCircle.get());
-                    circleMap.remove(existingCircle.get());
-                    clickedCoordinates.remove(currentPoint);
-                } else if (clickedCoordinates.size() < ATOMS_AMOUNT) {
-                    clickedCoordinates.add(currentPoint);
+            if (existingCircle.isPresent()) {
+                ((Pane) this.getParent()).getChildren().remove(existingCircle.get());
+                circleMap.remove(existingCircle.get());
+                clickedCoordinates.remove(currentPoint);
+            } else if (clickedCoordinates.size() < ATOMS_AMOUNT) {
+                clickedCoordinates.add(currentPoint);
 
-                    Circle circle = new Circle(centreX, centreY, ATOM_SIZE, Color.RED);
-                    ((Pane) this.getParent()).getChildren().add(circle);
-                    this.getParent().requestLayout();
+                Circle circle = new Circle(centreX, centreY, ATOM_SIZE, Color.RED);
+                ((Pane) this.getParent()).getChildren().add(circle);
+                this.getParent().requestLayout();
 
-                    circleMap.put(circle, currentPoint);
-                }
+                circleMap.put(circle, currentPoint);
+            }
         });
 
     }
@@ -82,7 +84,6 @@ public class Hexagon extends Polygon {
     private boolean bordersAtom = false;
     private Circle areaOfInfluence = null;
 
-    // Getter methods for necessary private variables
     public double getCentreX() {
         return centreX;
     }
@@ -116,7 +117,7 @@ public class Hexagon extends Polygon {
     public void convertToAtom(Pane pane) {
         isAtom = true;
         Circle atomCircle = new Circle(centreX, centreY, ATOM_SIZE, Color.YELLOW);
-        atomCircle.setVisible(false); // make the atom circle invisible
+        atomCircle.setVisible(false);
         pane.getChildren().add(atomCircle);
         configureAreaOfInfluence();
         pane.getChildren().add(areaOfInfluence);
@@ -172,6 +173,7 @@ public class Hexagon extends Polygon {
             int atomX = RootPane.getAtoms().get(2*i);
             int atomY = RootPane.getAtoms().get(2*i+1);
 
+
             if (HexBoard.getHexagon(atomX, atomY).getAreaOfInfluence().contains(centreX, centreY)) containsAreaOfInfluences++;
         }
     }
@@ -187,32 +189,10 @@ public class Hexagon extends Polygon {
         boolean[] bordersAtoms = new boolean[ATOMS_AMOUNT];
         int[][] indexes;
         if (x < 4) {
-            // x, y-1
-            // x, y+1
-            // x-1, y-1
-            // x-1, y
-            // x+1, y
-            // x+1, y+1
-
             indexes = new int[][]{{x - 1, y - 1}, {x - 1, y}, {x, y - 1}, {x, y + 1}, {x + 1, y}, {x + 1, y + 1}};
-        }
-        else if (x > 4) {
-            // x, y-1
-            // x, y+1
-            // x-1, y
-            // x-1, y+1
-            // x+1, y-1
-            // x+1, y
-
+        } else if (x > 4) {
             indexes = new int[][]{{x - 1, y}, {x - 1, y + 1}, {x, y - 1}, {x, y + 1}, {x + 1, y - 1}, {x + 1, y}};
         } else {
-            // x, y-1
-            // x, y+1
-            // x-1, y-1
-            // x-1, y
-            // x+1, y-1
-            // x+1, y
-
             indexes = new int[][]{{x - 1, y - 1}, {x - 1, y}, {x, y - 1}, {x, y + 1}, {x + 1, y - 1}, {x + 1, y}};
         }
         // catches exception that signifies a List boundary was breached and continues the code as
