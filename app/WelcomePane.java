@@ -4,30 +4,21 @@ import javafx.animation.RotateTransition;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-
-import java.net.URL;
 
 public class WelcomePane {
 
-    private WelcomePane() {
-    }
+    private WelcomePane() {}
 
     /**
-     * Static method that configures the starting screen the user sees
-     * when they open the game.
-     *
      * @return Returns a Pane loaded with the PNGs, GIFs and buttons necessary
      * to play the game
      */
@@ -70,7 +61,6 @@ public class WelcomePane {
         bot_left.setFitWidth(175);
         bot_left.setFitHeight(350);
 
-
         welcomePane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
         Text welcomeText = new Text("BlackBox+\n");
@@ -81,13 +71,11 @@ public class WelcomePane {
         welcomeText.setLayoutY(150);
         welcomePane.getChildren().add(welcomeText);
 
-
         Text atomText = new Text("Atoms Amount:");
         atomText.setFill(Color.YELLOW);
         atomText.setFont(Font.font("Lucida Console", FontWeight.BOLD, 30));
         atomText.setLayoutX(1150);
         atomText.setLayoutY(350);
-
         welcomePane.getChildren().add(atomText);
 
         Label atomLabel = new Label(String.valueOf((int) Constants.ATOMS_AMOUNT));
@@ -107,14 +95,13 @@ public class WelcomePane {
         });
 
         HBox hbox = new HBox(decrementButton, atomLabel, incrementButton);
-        hbox.setSpacing(30); // spacing between elements
+        hbox.setSpacing(30);
         hbox.setLayoutX(1150);
         hbox.setLayoutY(350);
         incrementButton.getStyleClass().add("increment-button");
         decrementButton.getStyleClass().add("decrement-button");
 
         welcomePane.getChildren().add(hbox);
-
 
         return welcomePane;
     }
