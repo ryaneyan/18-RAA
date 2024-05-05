@@ -21,26 +21,36 @@ public class RootPane {
     private static List<Integer> atoms = new ArrayList<>();
     private static Pane rootPane = new Pane();
 
+    /**
+     * Sets the background and adds each Hexagon to the root Pane for the game.
+     * Calls method to generate atoms.
+     */
     public static void generateRootPane() {
         rootPane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
         for (List<Hexagon> list : HexBoard.getHexBoard()) {
             rootPane.getChildren().addAll(list);
         }
-        generateRandomAtoms(rootPane);
+        generateRandomAtoms();
     }
 
-    private static void generateRandomAtoms(Pane root) {
+    /**
+     * Method to convert ATOM_AMOUNT Hexagons to atoms and adds their AOFs to rootPane
+     * Can be modified to generate hardcoded atoms to be used for testing/debugging
+     */
+    private static void generateRandomAtoms() {
         Random rand = new Random();
         int tally = 0;
-        int j = 0, k = 1;
         int x, y;
+
+    //used in testing
+        int j = 0, k = 1;
         while (tally < ATOMS_AMOUNT)
         {
             x = rand.nextInt(9);
             y = rand.nextInt(HexBoard.getHexBoard().get(x).size());
 
-
+    // hardcoded atom positions used for testing
 //            int[] atomsTest = {3, 1, 4, 3, 8, 4, 8, 0, 8, 1, 8, 2};
 //            x = atomsTest[j];
 //            y = atomsTest[k];
@@ -51,8 +61,7 @@ public class RootPane {
             }
             atoms.add(x);
             atoms.add(y);
-
-            current.convertToAtom(root);
+            current.convertToAtom(rootPane);
 
             tally++;
             j+=2;
@@ -77,7 +86,7 @@ public class RootPane {
 
         int[] temp;
         for (int j = 0; j < ATOMS_AMOUNT-1; j++) {
-            for (int i = 0; i < ATOMS_AMOUNT - 1; i++) {
+            for (int i = 0; i < ATOMS_AMOUNT-1; i++) {
                 if (atomArray[i][0] > atomArray[i + 1][0]) {
                     temp = atomArray[i];
                     atomArray[i] = atomArray[i + 1];
@@ -96,7 +105,6 @@ public class RootPane {
             atoms.add(atomArray[i][0]);
             atoms.add(atomArray[i][1]);
         }
-
     }
 
     public static void setPlayerName(String name) {

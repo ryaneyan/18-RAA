@@ -28,42 +28,41 @@ public class Game extends Application {
         startButton.getStyleClass().add("Start");
         startButton.setPrefSize(200, 200);
 
-        HexBoard.generateBoard();
-        RootPane.generateRootPane();
-        Pane rootPane = RootPane.getRootPane();
-
-        for (Node hex : rootPane.getChildren()) {
-            if (hex instanceof Hexagon) {
-                Hexagon current = (Hexagon) hex;
-                current.setAreaOfInfluenceCount();
-            }
-        }
-        HexagonButton.createButtons(rootPane);
-
-        Button displayRayButton = displayRays(rootPane);
-        rootPane.getChildren().add(displayRayButton);
-        displayRayButton.setLayoutX(1150);
-        displayRayButton.setLayoutY(420);
-        displayRayButton.setDisable(true);
-        displayRayButton.getStyleClass().add("button-disable");
-
-        Button checkAtomsButton = createCheckAtomsButton(rootPane, displayRayButton);
-        rootPane.getChildren().add(checkAtomsButton);
-        checkAtomsButton.setLayoutX(1150);
-        checkAtomsButton.setLayoutY(320);
-
-        ImageView key = new ImageView();
-        Image key_rays = new Image(Game.class.getResourceAsStream("/assets/key_rays.png"));
-        key.setImage(key_rays);
-        key.setFitWidth(150);
-        key.setFitHeight(150);
-        key.setLayoutX(5);
-        key.setLayoutY(630);
-        rootPane.getChildren().add(key);
-
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                HexBoard.generateBoard();
+                RootPane.generateRootPane();
+                Pane rootPane = RootPane.getRootPane();
+
+                for (Node hex : rootPane.getChildren()) {
+                    if (hex instanceof Hexagon) {
+                        Hexagon current = (Hexagon) hex;
+                        current.setAreaOfInfluenceCount();
+                    }
+                }
+                HexagonButton.createButtons(rootPane);
+
+                Button displayRayButton = displayRays(rootPane);
+                rootPane.getChildren().add(displayRayButton);
+                displayRayButton.setLayoutX(1150);
+                displayRayButton.setLayoutY(420);
+                displayRayButton.setDisable(true);
+                displayRayButton.getStyleClass().add("button-disable");
+
+                Button checkAtomsButton = createCheckAtomsButton(rootPane, displayRayButton);
+                rootPane.getChildren().add(checkAtomsButton);
+                checkAtomsButton.setLayoutX(1150);
+                checkAtomsButton.setLayoutY(320);
+
+                ImageView key = new ImageView();
+                Image key_rays = new Image(Game.class.getResourceAsStream("/assets/key_rays.png"));
+                key.setImage(key_rays);
+                key.setFitWidth(150);
+                key.setFitHeight(150);
+                key.setLayoutX(5);
+                key.setLayoutY(630);
+                rootPane.getChildren().add(key);
                 main.setRoot(rootPane);
             }
         });

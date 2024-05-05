@@ -1,3 +1,6 @@
+// CODE TO IMPLEMENT A MULTIPLAYER VERSION OF BLACKBOX+
+// UNUSED
+
 package app;
 
 import javafx.event.EventHandler;
@@ -23,12 +26,12 @@ public class AddPlayerPane {
         playersInput.setStyle("-fx-background-color: grey; -fx-text-fill: yellow");
         playersInput.setFont(new Font(20));
 
-        Button addPLayer = new Button("Confirm");
-        addPLayer.setStyle("-fx-background-color: grey; -fx-text-fill: yellow;");
-        addPLayer.setFont(Font.font("Lucida Console", FontWeight.BOLD, 20));
-        addPLayer.setTextAlignment(TextAlignment.LEFT);
+        Button addPlayerButton = new Button("Confirm");
+        addPlayerButton.setStyle("-fx-background-color: grey; -fx-text-fill: yellow;");
+        addPlayerButton.setFont(Font.font("Lucida Console", FontWeight.BOLD, 20));
+        addPlayerButton.setTextAlignment(TextAlignment.LEFT);
 
-        addPLayer.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        addPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (playersInput.getText().trim().isEmpty()) {
@@ -41,7 +44,7 @@ public class AddPlayerPane {
             }
         });
         
-        VBox vbox = new VBox(playerLabel, playersInput, addPlayer);
+        VBox vbox = new VBox(playerLabel, playersInput, addPlayerButton);
         vbox.setSpacing(5);
 
         Popup popup = new Popup();

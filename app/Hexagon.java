@@ -17,6 +17,15 @@ public class Hexagon extends Polygon {
 
     private int containsAreaOfInfluences = 0;
 
+    /**
+     * Constructor to make a hexagon. Uses math formulae and constants to calculate points around a centre
+     * and makes a Polygon joining them hexagonally. Coordinate (0,0) is defined as the top left
+     * most pixel in the window.
+     *
+     * @param centreX x-coordinate of the centre of the hexagon
+     * @param centreY y-coordinate of the centre of the hexagon
+     * @param radius  distance from the centre of the hexagon to each of the vertices
+     */
     public Hexagon(double centreX, double centreY, double radius) {
         super();
 
@@ -73,6 +82,7 @@ public class Hexagon extends Polygon {
     private boolean bordersAtom = false;
     private Circle areaOfInfluence = null;
 
+    // Getter methods for necessary private variables
     public double getCentreX() {
         return centreX;
     }
@@ -93,15 +103,30 @@ public class Hexagon extends Polygon {
         return pointsArray;
     }
 
+    public int getContainsAreaOfInfluences() {
+        return containsAreaOfInfluences;
+    }
+
+    /**
+     * Method that converts a Hexagon to an atom. Adds "area of influence" (AOF) circle and adds it to pane
+     * Calls method to configure said circle
+     *
+     * @param pane Pane to add the AOF circle
+     */
     public void convertToAtom(Pane pane) {
         isAtom = true;
         Circle atomCircle = new Circle(centreX, centreY, ATOM_SIZE, Color.YELLOW);
         atomCircle.setVisible(false); // make the atom circle invisible
         pane.getChildren().add(atomCircle);
-        setAreaOfInfluence(pane);
+        configureAreaOfInfluence();
+        pane.getChildren().add(areaOfInfluence);
     }
 
-    private void setAreaOfInfluence(Pane pane) {
+    /**
+     * Configures AOF circle of given atom
+     *
+     */
+    private void configureAreaOfInfluence() {
         areaOfInfluence = new Circle(centreX, centreY, X_DIFF);
         areaOfInfluence.setFill(Color.TRANSPARENT);
         areaOfInfluence.setStroke(Color.BLUE);
@@ -109,9 +134,13 @@ public class Hexagon extends Polygon {
 
         areaOfInfluence.getStrokeDashArray().addAll(5d, 10d);
         areaOfInfluence.setVisible(false);
-        pane.getChildren().add(areaOfInfluence);
+
     }
 
+    /**
+     * TODO RYAN
+     * @return
+     */
     public static int checkForAtomAndChangeColor() {
         int correctGuesses = 0;
         for (Map.Entry<Circle, Point2D> entry : circleMap.entrySet()) {
@@ -135,23 +164,28 @@ public class Hexagon extends Polygon {
         return correctGuesses;
     }
 
+    /**
+     * Sets number of AOF circles that enter atom
+     */
     public void setAreaOfInfluenceCount() {
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
             int atomX = RootPane.getAtoms().get(2*i);
             int atomY = RootPane.getAtoms().get(2*i+1);
 
-
             if (HexBoard.getHexagon(atomX, atomY).getAreaOfInfluence().contains(centreX, centreY)) containsAreaOfInfluences++;
         }
     }
 
-    public int getContainsAreaOfInfluences() {
-        return containsAreaOfInfluences;
-    }
-
+    /**
+     * Checks whether a given Hexagon borders any atoms, by comparing indices and the isAtom property
+     * of Hexagons
+     * @param x x-index of the atom to check
+     * @param y y-index of the atom to check
+     * @return Boolean array of whether the Hexagon borders atoms or not. Atoms are in order
+     */
     public static boolean[] checkForAdjacentAtoms(int x, int y) {
-        boolean[] bordersAtoms = new boolean[6];
-        int[][] indexes = new int[6][2];
+        boolean[] bordersAtoms = new boolean[ATOMS_AMOUNT];
+        int[][] indexes;
         if (x < 4) {
             // x, y-1
             // x, y+1
@@ -181,7 +215,9 @@ public class Hexagon extends Polygon {
 
             indexes = new int[][]{{x - 1, y - 1}, {x - 1, y}, {x, y - 1}, {x, y + 1}, {x + 1, y - 1}, {x + 1, y}};
         }
-        for (int i = 0; i < 6; i++) {
+        // catches exception that signifies a List boundary was breached and continues the code as
+        // this exception isnt fatal
+        for (int i = 0; i < ATOMS_AMOUNT; i++) {
             try {
                 bordersAtoms[i] = HexBoard.getHexagon(indexes[i][0], indexes[i][1]).isAtom;
             } catch (IndexOutOfBoundsException exception) {

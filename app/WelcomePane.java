@@ -17,10 +17,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+import java.net.URL;
+
 public class WelcomePane {
 
     private WelcomePane() {
     }
+
+    /**
+     * Static method that configures the starting screen the user sees
+     * when they open the game.
+     *
+     * @return Returns a Pane loaded with the PNGs, GIFs and buttons necessary
+     * to play the game
+     */
 
     public static Pane generateWelcomePane() {
         Pane welcomePane = new Pane();
