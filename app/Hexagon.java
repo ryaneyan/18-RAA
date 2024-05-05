@@ -1,6 +1,5 @@
 package app;
 
-
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -123,19 +122,14 @@ public class Hexagon extends Polygon {
         pane.getChildren().add(areaOfInfluence);
     }
 
-    /**
-     * Configures AOF circle of given atom
-     *
-     */
     private void configureAreaOfInfluence() {
         areaOfInfluence = new Circle(centreX, centreY, X_DIFF);
         areaOfInfluence.setFill(Color.TRANSPARENT);
         areaOfInfluence.setStroke(Color.BLUE);
-        areaOfInfluence.setStrokeType(StrokeType.OUTSIDE); // Set the stroke type to outside
+        areaOfInfluence.setStrokeType(StrokeType.OUTSIDE); 
 
         areaOfInfluence.getStrokeDashArray().addAll(5d, 10d);
         areaOfInfluence.setVisible(false);
-
     }
 
     /**
@@ -172,7 +166,6 @@ public class Hexagon extends Polygon {
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
             int atomX = RootPane.getAtoms().get(2*i);
             int atomY = RootPane.getAtoms().get(2*i+1);
-
 
             if (HexBoard.getHexagon(atomX, atomY).getAreaOfInfluence().contains(centreX, centreY)) containsAreaOfInfluences++;
         }
