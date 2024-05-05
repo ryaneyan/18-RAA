@@ -53,11 +53,9 @@ public class Ray {
 
         // checks whether ray originates on an atom, if yes then instantly terminates it
         if (checkAtomAtPosition(X, Y)) {
-            System.out.println("Ray Absorbed");
             finalHitState = 2;
             return;
         } else if (checkInitialReflection(X, Y, direction)) {
-            System.out.println("Ray reflected");
             finalHitState = 3;
             return;
         }
@@ -90,18 +88,13 @@ public class Ray {
         int numAreasInHitAtom = HexBoard.getHexagon(hitAtomCoordinates[0], hitAtomCoordinates[1]).getContainsAreaOfInfluences();
         int numAreasInCurrentAtom = HexBoard.getHexagon(xIndex, yIndex).getContainsAreaOfInfluences();
 
-        System.out.println("Current: " + xIndex + " " + yIndex);
-        System.out.println("areas in current: " + numAreasInCurrentAtom);
 
         if (checkAtomAtPosition(directHitCheckerCoords[0], directHitCheckerCoords[1]) && numAreasInCurrentAtom == 1) {
             // If it's a direct hit, no further action is needed here. Log or handle as appropriate.
-            System.out.println("Direct hit! Ray stops.");
             finalHitState = 2;
 
             return;
         } else if (checkAOFHit(xIndex, yIndex, direction)) {
-            System.out.println("Hit:     " + hitAtomCoordinates[0] + " " + hitAtomCoordinates[1]);
-            System.out.println("areas in hit: " + numAreasInHitAtom);
                 switch (direction) {
                     case DIAGONAL_DOWN_LEFT:
                         if (numAreasInCurrentAtom == 1) {
@@ -212,7 +205,7 @@ public class Ray {
 
         lastXIndex = xIndex;
         lastYIndex = yIndex;
-        System.out.println("----------------------------------");
+
 
         extendRay(newIndexes[0], newIndexes[1], nextDirection);
     }
@@ -275,7 +268,6 @@ public class Ray {
             }
             else if (HexBoard.getHexBoard().get(getAtoms().get(2 * i)).get(getAtoms().get(2 * i + 1)).getAreaOfInfluence().contains(point)) {
                 int directHitCheck = checkDirectHit(xIndex, yIndex, direction);
-//                System.out.println("hits atom at: " + getAtoms().get(2*i) + "," + getAtoms().get(2*i+1));
 
                 hitAtomCoordinates[0] = getAtoms().get(2*i);
                 hitAtomCoordinates[1] = getAtoms().get(2*i+1);
@@ -440,7 +432,6 @@ public class Ray {
     if(!(finalHitState == 3)) {
         Button hitButton = HexagonButton.getButtonAtPoint(newPoint, HexagonButton.root);
         if (hitButton != null) {
-//            System.out.println("Ray hits button: " + hitButton);
             hitButton.getStyleClass().removeAll("horizontal-left", "horizontal-right", "diagonal-down-left", "diagonal-down-right", "diagonal-up-left", "diagonal-up-right");
             hitButton.getStyleClass().add("button-hit");
             hitButton.getStyleClass().add(getStyleForDirection(direction));

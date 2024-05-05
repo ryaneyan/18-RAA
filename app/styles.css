@@ -1,6 +1,6 @@
 .custom-button {
     -fx-background-color: TRANSPARENT; /* do set this to tranparent when you ge the arrow sorted*/
-    -fx-background-image: url("assets/arrow.png");
+    -fx-background-image: url("../assets/arrow.png");
     -fx-background-size: 100% 100%;
     -fx-scale-x: 1;
     -fx-scale-y: 1;
@@ -15,15 +15,15 @@
 }
 
 .button-hit {
-    -fx-background-image: url("assets/arrow_deflect.png");
+    -fx-background-image: url("../assets/arrow_deflect.png");
 }
 
 .button-direct-hit {
-    -fx-background-image: url("assets/arrow_direct.png");
+    -fx-background-image: url("../assets/arrow_direct.png");
 }
 
 .button-reflect-hit {
-    -fx-background-image: url("assets/arrow_reflect.png");
+    -fx-background-image: url("../assets/arrow_reflect.png");
 }
 
 
@@ -57,7 +57,7 @@
 }
 
 .increment-button {
-    -fx-background-image: url("assets/arrow_increment.png");
+    -fx-background-image: url("../assets/arrow_increment.png");
     -fx-display: inline-block;
     -fx-transition-duration: 1s;
     -fx-background-size: 100% 100%;
@@ -65,7 +65,7 @@
 }
 
 .decrement-button {
-    -fx-background-image: url("assets/arrow_decrement.png");
+    -fx-background-image: url("../assets/arrow_decrement.png");
     -fx-display: inline-block;
     -fx-transition-duration: 1s;
     -fx-background-size: 100% 100%;
@@ -80,7 +80,7 @@
 
 .button.Start {
     -fx-background-color: transparent;
-    -fx-background-image: url('assets/start.png');
+    -fx-background-image: url('../assets/start.png');
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;

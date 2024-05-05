@@ -26,7 +26,7 @@ public class WelcomePane {
         Pane welcomePane = new Pane();
 
         ImageView gifView = new ImageView();
-        Image gif = new Image("file:app/assets/test.PNG");
+        Image gif = new Image(WelcomePane.class.getResourceAsStream("/assets/test.PNG"));
         gifView.setImage(gif);
 
         gifView.layoutXProperty().bind(welcomePane.widthProperty().subtract(gifView.fitWidthProperty()).divide(2));
@@ -42,7 +42,7 @@ public class WelcomePane {
         welcomePane.getChildren().add(gifView);
 
         ImageView top_left = new ImageView();
-        Image toplef = new Image("file:app/assets/des_toplef.PNG");
+        Image toplef = new Image(WelcomePane.class.getResourceAsStream("/assets/des_toplef.png"));
         top_left.setImage(toplef);
         top_left.setLayoutY(20);
         welcomePane.getChildren().add(top_left);
@@ -51,7 +51,7 @@ public class WelcomePane {
         top_left.setFitHeight(350);
 
         ImageView bot_left = new ImageView();
-        Image botlef = new Image("file:app/assets/des_botlef.PNG");
+        Image botlef = new Image(WelcomePane.class.getResourceAsStream("/assets/des_botlef.png"));
         bot_left.setImage(botlef);
         bot_left.setLayoutY(500);
         bot_left.setLayoutX(15);

@@ -40,14 +40,14 @@ public class Game extends Application {
 
         Button startButton = new Button("Start");
         startButton.getStyleClass().add("Start");
-        startButton.setPrefSize(200,200);
+        startButton.setPrefSize(200, 200);
 
         // generates the board and buttons at the same time
         HexBoard.generateBoard();
         RootPane.generateRootPane();
         Pane rootPane = RootPane.getRootPane();
 
-        for (Node hex: rootPane.getChildren()){
+        for (Node hex : rootPane.getChildren()) {
             if (hex instanceof Hexagon) {
                 Hexagon current = (Hexagon) hex;
                 current.setAreaOfInfluenceCount();
@@ -68,24 +68,23 @@ public class Game extends Application {
         checkAtomsButton.setLayoutX(1150);
         checkAtomsButton.setLayoutY(320);
 
-        ImageView coord = new ImageView();
-        Image cord_sys = new Image("file:app/assets/coord.PNG");
-        coord.setImage(cord_sys);
-        coord.setFitWidth(910);
-        coord.setFitHeight(640);
-        coord.setLayoutX(210);
-        coord.setLayoutY(70);
+//        ImageView coord = new ImageView();
+//        Image cord_sys = new Image(Game.class.getResourceAsStream("/assets/coord.png"));
+//        coord.setImage(cord_sys);
+//        coord.setFitWidth(910);
+//        coord.setFitHeight(640);
+//        coord.setLayoutX(210);
+//        coord.setLayoutY(70);
 //            rootPane.getChildren().add(coord);
 
         ImageView key = new ImageView();
-        Image key_rays = new Image("file:app/assets/key_rays.PNG");
+        Image key_rays = new Image(Game.class.getResourceAsStream("/assets/key_rays.png"));
         key.setImage(key_rays);
         key.setFitWidth(150);
         key.setFitHeight(150);
         key.setLayoutX(5);
         key.setLayoutY(630);
         rootPane.getChildren().add(key);
-
 
 
         startButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -108,13 +107,12 @@ public class Game extends Application {
     }
 
 
-    public static Button createCheckAtomsButton(Pane pane, Button displayRay)
-    {
+    public static Button createCheckAtomsButton(Pane pane, Button displayRay) {
         Button checkAtomsButton = new Button("Submit");
         checkAtomsButton.getStyleClass().add("check-atoms-button");
         checkAtomsButton.setOnAction(event -> {
 
-            int incorrectGuesses =  ATOMS_AMOUNT - Hexagon.checkForAtomAndChangeColor();
+            int incorrectGuesses = ATOMS_AMOUNT - Hexagon.checkForAtomAndChangeColor();
 
             System.out.println(incorrectGuesses);
             int atom_score = HexagonButton.getScore();
@@ -130,7 +128,7 @@ public class Game extends Application {
             }
 
             ImageView key = new ImageView();
-            Image key_atom = new Image("file:app/assets/key_atoms.PNG");
+            Image key_atom = new Image(Game.class.getResourceAsStream("/assets/key_atoms.png"));
             key.setImage(key_atom);
             key.setFitWidth(200);
             key.setFitHeight(200);
@@ -145,8 +143,7 @@ public class Game extends Application {
         return checkAtomsButton;
     }
 
-    public static Button displayRays(Pane pane)
-    {
+    public static Button displayRays(Pane pane) {
         Button checkRay = new Button("Show Rays");
 //        checkRay.getStyleClass().removeAll("button-disable");
         checkRay.getStyleClass().add("check-atoms-button");
