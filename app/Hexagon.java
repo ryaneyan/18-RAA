@@ -1,10 +1,11 @@
 package app;
 
-
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
 
 import java.util.*;
 
@@ -27,7 +28,6 @@ public class Hexagon extends Polygon {
         final double angleDegreeChange = Math.PI * 2 / NUM_OF_SIDES + (240 * Math.PI / 180);
 
         for (int i = 0; i < NUM_OF_SIDES; i++, angle += angleDegreeChange) {
-
             double x = Math.sin(angle) * radius + centreX;
             double y = Math.cos(angle) * radius + centreY;
             pointsArray[i] = new Point2D(x, y);
@@ -44,33 +44,31 @@ public class Hexagon extends Polygon {
             Hexagon.super.setStroke(Color.YELLOW);
         });
         super.setOnMouseClicked(mouseEvent -> {
-                Point2D currentPoint = new Point2D(centreX, centreY);
-                Optional<Circle> existingCircle = circleMap.keySet().stream()
-                        .filter(circle -> circleMap.get(circle).equals(currentPoint))
-                        .findFirst();
+            Point2D currentPoint = new Point2D(centreX, centreY);
+            Optional<Circle> existingCircle = circleMap.keySet().stream()
+                    .filter(circle -> circleMap.get(circle).equals(currentPoint))
+                    .findFirst();
 
-                if (existingCircle.isPresent()) {
-                    ((Pane) this.getParent()).getChildren().remove(existingCircle.get());
-                    circleMap.remove(existingCircle.get());
-                    clickedCoordinates.remove(currentPoint);
-                } else if (clickedCoordinates.size() < ATOMS_AMOUNT) {
-                    clickedCoordinates.add(currentPoint);
+            if (existingCircle.isPresent()) {
+                ((Pane) this.getParent()).getChildren().remove(existingCircle.get());
+                circleMap.remove(existingCircle.get());
+                clickedCoordinates.remove(currentPoint);
+            } else if (clickedCoordinates.size() < ATOMS_AMOUNT) {
+                clickedCoordinates.add(currentPoint);
 
-                    Circle circle = new Circle(centreX, centreY, ATOM_SIZE, Color.RED);
-                    ((Pane) this.getParent()).getChildren().add(circle);
-                    this.getParent().requestLayout();
+                Circle circle = new Circle(centreX, centreY, ATOM_SIZE, Color.RED);
+                ((Pane) this.getParent()).getChildren().add(circle);
+                this.getParent().requestLayout();
 
-                    circleMap.put(circle, currentPoint);
-                }
+                circleMap.put(circle, currentPoint);
+            }
         });
-
     }
 
     private Point2D[] pointsArray = new Point2D[6];
     final private double centreX;
     final private double centreY;
     private boolean isAtom = false;
-    private boolean bordersAtom = false;
     private Circle areaOfInfluence = null;
 
     public double getCentreX() {
@@ -96,7 +94,7 @@ public class Hexagon extends Polygon {
     public void convertToAtom(Pane pane) {
         isAtom = true;
         Circle atomCircle = new Circle(centreX, centreY, ATOM_SIZE, Color.YELLOW);
-        atomCircle.setVisible(false); // make the atom circle invisible
+        atomCircle.setVisible(false);
         pane.getChildren().add(atomCircle);
         setAreaOfInfluence(pane);
     }
@@ -105,8 +103,7 @@ public class Hexagon extends Polygon {
         areaOfInfluence = new Circle(centreX, centreY, X_DIFF);
         areaOfInfluence.setFill(Color.TRANSPARENT);
         areaOfInfluence.setStroke(Color.BLUE);
-        areaOfInfluence.setStrokeType(StrokeType.OUTSIDE); // Set the stroke type to outside
-
+        areaOfInfluence.setStrokeType(StrokeType.OUTSIDE);
         areaOfInfluence.getStrokeDashArray().addAll(5d, 10d);
         areaOfInfluence.setVisible(false);
         pane.getChildren().add(areaOfInfluence);
@@ -137,9 +134,8 @@ public class Hexagon extends Polygon {
 
     public void setAreaOfInfluenceCount() {
         for (int i = 0; i < ATOMS_AMOUNT; i++) {
-            int atomX = RootPane.getAtoms().get(2*i);
-            int atomY = RootPane.getAtoms().get(2*i+1);
-
+            int atomX = RootPane.getAtoms().get(2 * i);
+            int atomY = RootPane.getAtoms().get(2 * i + 1);
 
             if (HexBoard.getHexagon(atomX, atomY).getAreaOfInfluence().contains(centreX, centreY)) containsAreaOfInfluences++;
         }
@@ -153,32 +149,10 @@ public class Hexagon extends Polygon {
         boolean[] bordersAtoms = new boolean[6];
         int[][] indexes = new int[6][2];
         if (x < 4) {
-            // x, y-1
-            // x, y+1
-            // x-1, y-1
-            // x-1, y
-            // x+1, y
-            // x+1, y+1
-
             indexes = new int[][]{{x - 1, y - 1}, {x - 1, y}, {x, y - 1}, {x, y + 1}, {x + 1, y}, {x + 1, y + 1}};
-        }
-        else if (x > 4) {
-            // x, y-1
-            // x, y+1
-            // x-1, y
-            // x-1, y+1
-            // x+1, y-1
-            // x+1, y
-
+        } else if (x > 4) {
             indexes = new int[][]{{x - 1, y}, {x - 1, y + 1}, {x, y - 1}, {x, y + 1}, {x + 1, y - 1}, {x + 1, y}};
         } else {
-            // x, y-1
-            // x, y+1
-            // x-1, y-1
-            // x-1, y
-            // x+1, y-1
-            // x+1, y
-
             indexes = new int[][]{{x - 1, y - 1}, {x - 1, y}, {x, y - 1}, {x, y + 1}, {x + 1, y - 1}, {x + 1, y}};
         }
         for (int i = 0; i < 6; i++) {
