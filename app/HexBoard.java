@@ -7,9 +7,7 @@ import static app.Constants.*;
 
 public class HexBoard {
 
-    private HexBoard() {
-    }
-
+    private HexBoard() {}
     private static List<List<Hexagon>> hexBoard = new ArrayList<>();
 
     /**
@@ -37,7 +35,6 @@ public class HexBoard {
             if (increasing) limit++;
             else limit--;
         }
-
     }
 
     public static List<List<Hexagon>> getHexBoard() {
